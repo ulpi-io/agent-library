@@ -153,15 +153,43 @@ cp .mcp.json /path/to/your/project/
 └── .mcp.json                      # MCP server configurations
 ```
 
+## Agents Overview
+
+This repository provides **35 production-ready AI agent configurations** across 5 editors and 7 frameworks.
+
+### Framework × Editor Compatibility Matrix
+
+| Framework | ULPI | Cursor | Amazon Q | Claude Code | Codex |
+|-----------|------|--------|----------|-------------|-------|
+| **Laravel 12.x** | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Express.js** | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **NestJS** | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Next.js 14/15** | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Expo React Native** | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Flutter** | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Magento 2** | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+### Supported Frameworks
+
+| Framework | Key Features |
+|-----------|-------------|
+| **Laravel 12.x** | Multi-database (MySQL, Redis, DynamoDB), Queues, Horizon, Service layer patterns, API Resources |
+| **Express.js** | REST API patterns, Middleware architecture, Error handling, Route organization |
+| **NestJS** | TypeScript enterprise patterns, Dependency injection, Bull/BullMQ queues, Microservices |
+| **Next.js 14/15** | App Router, Server Components, Server Actions, React 19, TypeScript |
+| **Expo React Native** | Cross-platform mobile (iOS/Android/Web), Native modules, EAS Build/Update |
+| **Flutter** | Dart, Multi-platform (iOS/Android/Web/Desktop), Widget architecture, State management |
+| **Magento 2** | E-commerce, Dependency injection, Plugin system, Multi-store architecture |
+
 ## MCP Servers
 
 This project uses Model Context Protocol (MCP) servers to extend AI capabilities:
 
 ### Context7
-Provides enhanced context management capabilities.
+Provides enhanced context management and documentation lookup capabilities for modern frameworks and libraries.
 
 ### Chrome DevTools
-Allows ULPI and Claude Code to control and interact with Chrome browser via the DevTools Protocol.
+Allows ULPI and Claude Code to control and interact with Chrome browser via the DevTools Protocol for browser automation, testing, and debugging.
 
 #### Setup Chrome DevTools MCP
 
@@ -225,31 +253,40 @@ The script automatically:
 
 The script is already executable and ready to use.
 
-## Amazon Q Developer Rules
+## Amazon Q Developer
 
-### Laravel Rule
+Amazon Q uses project-local rules (`.rule.md` files) that automatically apply coding standards and best practices.
 
-The Laravel development rule (`.amazonq/rules/laravel.rule.md`) provides comprehensive coding standards for Laravel 12.x development:
+### Available Framework Rules
 
-- Multi-database architectures (MySQL, Redis, DynamoDB)
-- Queue systems with Laravel Horizon
-- Service layer patterns and dependency injection
-- API development with FormRequests and Resources
-- Security protocols and testing requirements
-- Production-ready patterns and best practices
+| Framework | File | Description |
+|-----------|------|-------------|
+| **Laravel 12.x** | `.amazonq/rules/laravel.rule.md` | Multi-database, queues, Horizon, service layers, API patterns |
+| **Express.js** | `.amazonq/rules/express.rule.md` | REST APIs, middleware patterns, error handling, routing |
+| **NestJS** | `.amazonq/rules/nestjs.rule.md` | TypeScript enterprise, DI, Bull queues, microservices |
+| **Next.js 14/15** | `.amazonq/rules/nextjs.rule.md` | App Router, Server Components, Server Actions, React 19 |
+| **Expo React Native** | `.amazonq/rules/expo-react-native.rule.md` | Cross-platform mobile, native modules, EAS integration |
+| **Flutter** | `.amazonq/rules/flutter.rule.md` | Dart patterns, widget architecture, state management |
+| **Magento 2** | `.amazonq/rules/magento.rule.md` | E-commerce patterns, DI, plugins, multi-store |
 
-**Usage in Amazon Q:**
-- Place rules in `.amazonq/rules/` directory
-- Rules automatically apply to your project
+### Usage
+
+**Automatic Application:**
+- Rules in `.amazonq/rules/` automatically apply to your project
+- No manual activation required
 - Supports both project-local and global configurations
-- Use Markdown format with `.rule.md` extension
 
-**Global Configuration:**
-For global MCP server configuration, create `~/.aws/amazonq/mcp.json`:
+**Global MCP Configuration:**
+
+Create `~/.aws/amazonq/mcp.json` for global MCP server access:
 
 ```json
 {
   "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    },
     "chrome-devtools": {
       "command": "npx",
       "args": ["-y", "chrome-devtools-mcp@latest", "-u", "http://localhost:9222"]
@@ -258,65 +295,178 @@ For global MCP server configuration, create `~/.aws/amazonq/mcp.json`:
 }
 ```
 
-## Cursor Agents
+The setup script automatically configures this for you.
 
-### Laravel Agent
+## Cursor
 
-The Laravel Senior Engineer agent (`.cursor/agents/laravel/AGENTS.md`) provides expert guidance for Laravel 12.x development, including:
+Cursor uses hierarchical `AGENTS.md` files that provide context-aware AI assistance based on your current directory.
 
-- Multi-database architectures (MySQL, Redis, DynamoDB)
-- Queue systems with Laravel Horizon
-- Service layer patterns
-- API development with FormRequests and Resources
-- Production-ready patterns and best practices
+### Available Framework Agents
 
-**Usage in Cursor:**
-- Automatically applies when working in the `laravel/` directory
-- Manually invoke with `@AGENTS` reference
-- Combines hierarchically with parent directory instructions
+| Framework | File | Description |
+|-----------|------|-------------|
+| **Global** | `.cursor/agents/AGENTS.md` | Base instructions for all directories |
+| **Laravel 12.x** | `.cursor/agents/laravel/AGENTS.md` | Multi-database, queues, Horizon, service layers |
+| **Express.js** | `.cursor/agents/express/AGENTS.md` | REST APIs, middleware, error handling patterns |
+| **NestJS** | `.cursor/agents/nestjs/AGENTS.md` | TypeScript enterprise, DI, Bull queues |
+| **Next.js 14/15** | `.cursor/agents/nextjs/AGENTS.md` | App Router, Server Components, Server Actions |
+| **Expo React Native** | `.cursor/agents/expo-react-native/AGENTS.md` | Cross-platform mobile, native modules |
+| **Flutter** | `.cursor/agents/flutter/AGENTS.md` | Dart patterns, widget architecture |
+| **Magento 2** | `.cursor/agents/magento/AGENTS.md` | E-commerce, DI, plugins, multi-store |
 
-## ULPI Agents
+### Usage
 
-Located in `.ulpi/agents/engineering/`, these YAML-based agent configurations work with ULPI-compatible systems.
+**Automatic Application:**
+- Agents automatically apply when working in their respective directories
+- Hierarchical: combines global + directory-specific instructions
+- Manually invoke with `@AGENTS` reference in chat
+
+**Global MCP Configuration:**
+
+Create `~/.cursor/mcp.json` for global MCP server access:
+
+```json
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest", "-u", "http://localhost:9222"]
+    }
+  }
+}
+```
+
+The setup script automatically configures this for you.
+
+## Claude Code
+
+Claude Code uses agent files in `.claude/agents/engineering/` to provide specialized framework guidance.
+
+### Available Framework Agents
+
+| Framework | File | Description |
+|-----------|------|-------------|
+| **Laravel 12.x** | `.claude/agents/engineering/laravel-senior-engineer.md` | Multi-database, queues, Horizon, service layers |
+| **Express.js** | `.claude/agents/engineering/express-senior-engineer.md` | REST APIs, middleware, error handling |
+| **NestJS** | `.claude/agents/engineering/nestjs-senior-engineer.md` | TypeScript enterprise, DI, Bull queues |
+| **Next.js 14/15** | `.claude/agents/engineering/nextjs-senior-engineer.md` | App Router, Server Components, Server Actions |
+| **Expo React Native** | `.claude/agents/engineering/expo-react-native-senior-engineer.md` | Cross-platform mobile, native modules |
+| **Flutter** | `.claude/agents/engineering/flutter-senior-engineer.md` | Dart patterns, widget architecture |
+| **Magento 2** | `.claude/agents/engineering/magento-senior-engineer.md` | E-commerce, DI, plugins, multi-store |
+
+### Usage
+
+**Manual Invocation:**
+- Agents are manually loaded based on project context
+- Provide comprehensive framework-specific guidance
+- Include best practices, patterns, and production standards
+
+**Global MCP Configuration:**
+
+Create `~/.claude/mcp.json` for global MCP server access:
+
+```json
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest", "-u", "http://localhost:9222"]
+    }
+  }
+}
+```
+
+The setup script automatically configures this for you.
+
+## ULPI
+
+ULPI uses YAML-based agent configurations in `.ulpi/agents/engineering/` for structured AI agent definitions.
+
+### Available Framework Agents
+
+| Framework | File | Description |
+|-----------|------|-------------|
+| **Laravel 12.x** | `.ulpi/agents/engineering/laravel-senior-engineer.yaml` | Multi-database, queues, Horizon, service layers |
+| **Express.js** | `.ulpi/agents/engineering/express-senior-engineer.yaml` | REST APIs, middleware, error handling |
+| **NestJS** | `.ulpi/agents/engineering/nestjs-senior-engineer.yaml` | TypeScript enterprise, DI, Bull queues |
+| **Next.js 14/15** | `.ulpi/agents/engineering/nextjs-senior-engineer.yaml` | App Router, Server Components, Server Actions |
+| **Expo React Native** | `.ulpi/agents/engineering/expo-react-native-senior-engineer.yaml` | Cross-platform mobile, native modules |
+| **Flutter** | `.ulpi/agents/engineering/flutter-senior-engineer.yaml` | Dart patterns, widget architecture |
+| **Magento 2** | `.ulpi/agents/engineering/magento-senior-engineer.yaml` | E-commerce, DI, plugins, multi-store |
+
+### Usage
+
+**YAML Configuration Format:**
+- Structured agent definitions with metadata
+- Compatible with ULPI-based systems
+- Includes role definitions, capabilities, and constraints
+
+**Project MCP Configuration:**
+
+The setup script creates `.ulpi/mcp.json` in your project:
+
+```json
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest", "-u", "http://localhost:9222"]
+    }
+  }
+}
+```
 
 ### Tools
 
 The `.ulpi/tools/` directory contains utility scripts:
-- `setup.sh` - One-command installation script for setting up all AI agent configurations
+- `setup.sh` - One-command installation script for all AI agent configurations
 - `launch-chrome-debug.sh` - Launch Chrome with remote debugging for MCP integration
 
-## Claude Code Agents
+## GitHub Codex
 
-Located in `.claude/agents/engineering/`, these agents provide specialized guidance for Claude Code users.
+GitHub Codex uses the `AGENTS.md` file in your project root for AI assistance. The setup script automatically copies the framework-specific agent to `AGENTS.md`.
 
-## GitHub Codex Agents
+### Available Framework Agents
 
-### AGENTS.md Format
+| Framework | Source File | Description |
+|-----------|------------|-------------|
+| **Laravel 12.x** | `.codex/laravel.md` | Multi-database, queues, Horizon, service layers |
+| **Express.js** | `.codex/express.md` | REST APIs, middleware, error handling |
+| **NestJS** | `.codex/nestjs.md` | TypeScript enterprise, DI, Bull queues |
+| **Next.js 14/15** | `.codex/nextjs.md` | App Router, Server Components, Server Actions |
+| **Expo React Native** | `.codex/expo-react-native.md` | Cross-platform mobile, native modules |
+| **Flutter** | `.codex/flutter.md` | Dart patterns, widget architecture |
+| **Magento 2** | `.codex/magento.md` | E-commerce, DI, plugins, multi-store |
 
-GitHub Codex uses the `AGENTS.md` file in the project root to provide AI assistance. The setup script automatically copies the appropriate framework agent to your project root as `AGENTS.md`.
+### Usage
 
-**Available Framework Agents:**
-- `.codex/laravel.md` - Laravel 12.x agent with multi-database, queues, Horizon, and production patterns
-
-**Usage with Codex:**
-- The `AGENTS.md` file is automatically discovered in the project root
+**Automatic Discovery:**
+- Place `AGENTS.md` in your project root
+- GitHub Codex automatically discovers and applies it
 - Provides comprehensive framework-specific guidance
 - Includes code examples, best practices, and production patterns
-- Automatically applies when using GitHub Codex
 
-**How it works:**
-1. Run the setup script with `--editors codex --framework laravel`
-2. The installer downloads `.codex/laravel.md` from the repository
-3. The file is automatically copied to `AGENTS.md` in your project root
-4. GitHub Codex discovers and uses the `AGENTS.md` file
+**Installation Flow:**
+1. Run setup: `bash setup.sh --editors codex --framework <framework>`
+2. Installer downloads `.codex/<framework>.md` from repository
+3. File is automatically copied to `AGENTS.md` in project root
+4. GitHub Codex discovers and uses the agent configuration
 
-### MCP Server Configuration
+**Global MCP Configuration:**
 
-When installing Codex support, the setup script automatically configures MCP servers in the global Codex configuration file.
-
-**Configuration File:** `~/.codex/config.toml`
-
-The installer adds two MCP servers:
+The setup script configures MCP servers in `~/.codex/config.toml`:
 
 ```toml
 [mcp_servers.context7]
@@ -329,10 +479,10 @@ args = ["-y", "chrome-devtools-mcp@latest", "-u", "http://localhost:9222"]
 ```
 
 **Features:**
-- Automatically creates `~/.codex/config.toml` if it doesn't exist
-- Safely appends MCP servers if the file already exists
-- Preserves existing Codex configuration (model providers, etc.)
-- Only adds servers that don't already exist
+- Automatically creates `~/.codex/config.toml` if needed
+- Safely appends MCP servers without overwriting existing config
+- Preserves model providers and other settings
+- Only adds missing servers
 
 ---
 
