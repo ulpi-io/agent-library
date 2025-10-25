@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://ulpi.io/images/logo.svg" alt="ULPI Logo" width="200"/>
+  <img src="media/ulpi-icon-512x512.png" alt="ULPI Logo" width="200"/>
 
   # Agent Library
 
