@@ -1,13 +1,14 @@
 {
   "name": "@ulpi/agent-library",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Professional AI agent configurations for multiple editors and frameworks",
   "main": "src/index.js",
   "bin": {
     "ulpi-agent-library": "./bin/cli.js"
   },
   "scripts": {
-    "test": "node bin/cli.js --help"
+    "test": "node bin/cli.js --help",
+    "postinstall": "node bin/postinstall.js"
   },
   "keywords": [
     "ai",
@@ -38,6 +39,9 @@
   },
   "engines": {
     "node": ">=14.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "dependencies": {
     "chalk": "^4.1.2",
