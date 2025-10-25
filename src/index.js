@@ -8,6 +8,14 @@ async function run(options) {
   console.log(chalk.blue.bold('║') + '  ULPI Agent Library Installer                         ' + chalk.blue.bold('║'));
   console.log(chalk.blue.bold('╚═══════════════════════════════════════════════════════════╝\n'));
 
+  // Show welcome message if in interactive mode
+  if (!options.framework && !options.editors) {
+    console.log(chalk.cyan('👋 Welcome! This installer will help you set up AI agent'));
+    console.log(chalk.cyan('   configurations for your project.\n'));
+    console.log(chalk.gray('   📚 Documentation: https://github.com/ulpi-io/agent-library'));
+    console.log(chalk.gray('   💪 Powered by: https://ulpi.io\n'));
+  }
+
   // Get configuration
   let { framework, editors, target, port, dryRun } = options;
 

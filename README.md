@@ -47,6 +47,8 @@ Supports: [ULPI](https://ulpi.io) · [Cursor](https://cursor.sh/) · [Amazon Q](
 npm install -g @ulpi/agent-library
 ```
 
+> After installation completes, you're ready to configure your project!
+
 **Step 2: Run the installer in your project**
 
 ```bash
