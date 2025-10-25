@@ -5,6 +5,8 @@
 
   **Professional AI Agent Configurations for Multiple Editors**
 
+  [![npm version](https://img.shields.io/npm/v/@ulpi/agent-library.svg)](https://www.npmjs.com/package/@ulpi/agent-library)
+  [![npm downloads](https://img.shields.io/npm/dm/@ulpi/agent-library.svg)](https://www.npmjs.com/package/@ulpi/agent-library)
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
   [![Powered by ULPI](https://img.shields.io/badge/Powered%20by-ULPI-blue)](https://ulpi.io)
 
@@ -37,14 +39,27 @@ Supports: [ULPI](https://ulpi.io) · [Cursor](https://cursor.sh/) · [Amazon Q](
 
 ## Quick Start
 
-### NPM Installation (Recommended)
+### Installation
 
-Install globally via npm and run the interactive installer:
+**Step 1: Install globally via npm**
 
 ```bash
 npm install -g @ulpi/agent-library
+```
+
+**Step 2: Run the installer in your project**
+
+```bash
+cd /path/to/your/project
 ulpi-agent-library
 ```
+
+The interactive installer will:
+1. Prompt you to select your framework (Laravel, Next.js, Express, NestJS, etc.)
+2. Ask which editors to configure (ULPI, Cursor, Amazon Q, Claude Code, Codex, or all)
+3. Download and install the appropriate agent configurations
+4. Set up MCP servers (Context7 & Chrome DevTools) for enhanced AI capabilities
+5. Create all necessary configuration files in your project
 
 **Command-Line Options:**
 ```bash
