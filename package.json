@@ -4,7 +4,7 @@
   "description": "Professional AI agent configurations for multiple editors and frameworks",
   "main": "src/index.js",
   "bin": {
-    "ulpi-agent-library": "./bin/cli.js"
+    "ulpi-agent-library": "bin/cli.js"
   },
   "scripts": {
     "test": "node bin/cli.js --help",
@@ -32,7 +32,7 @@
   "homepage": "https://github.com/ulpi-io/agent-library",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ulpi-io/agent-library.git"
+    "url": "git+https://github.com/ulpi-io/agent-library.git"
   },
   "bugs": {
     "url": "https://github.com/ulpi-io/agent-library/issues"
