@@ -18,17 +18,31 @@ set -e
 
 # Check Bash version (requires 4.0+ for associative arrays)
 if [ "${BASH_VERSINFO[0]}" -lt 4 ]; then
-    echo "Error: This script requires Bash 4.0 or higher"
+    echo ""
+    echo "════════════════════════════════════════════════════════════"
+    echo "  ⚠️  Bash Version Error"
+    echo "════════════════════════════════════════════════════════════"
+    echo ""
+    echo "This script requires Bash 4.0 or higher."
     echo "Current version: $BASH_VERSION"
     echo ""
-    echo "On macOS, install modern bash with:"
-    echo "  brew install bash"
+    echo "📦 On macOS, install modern bash with Homebrew:"
+    echo "   brew install bash"
     echo ""
-    echo "Then run the script with:"
-    echo "  /usr/local/bin/bash setup.sh"
+    echo "🚀 Then run with one of these commands:"
     echo ""
-    echo "Or if using Homebrew on Apple Silicon:"
-    echo "  /opt/homebrew/bin/bash setup.sh"
+    echo "   # Apple Silicon (M1/M2/M3):"
+    echo "   curl -fsSL https://raw.githubusercontent.com/ulpi-io/agent-library/main/.ulpi/tools/setup.sh | /opt/homebrew/bin/bash"
+    echo ""
+    echo "   # Intel Mac:"
+    echo "   curl -fsSL https://raw.githubusercontent.com/ulpi-io/agent-library/main/.ulpi/tools/setup.sh | /usr/local/bin/bash"
+    echo ""
+    echo "   # Or download and run locally:"
+    echo "   curl -fsSL https://raw.githubusercontent.com/ulpi-io/agent-library/main/.ulpi/tools/setup.sh > setup.sh"
+    echo "   /opt/homebrew/bin/bash setup.sh  # or /usr/local/bin/bash setup.sh"
+    echo ""
+    echo "════════════════════════════════════════════════════════════"
+    echo ""
     exit 1
 fi
 

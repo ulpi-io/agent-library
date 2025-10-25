@@ -42,8 +42,18 @@ Supports: [ULPI](https://ulpi.io) · [Cursor](https://cursor.sh/) · [Amazon Q](
 Professional installer that downloads only the files you need. Choose which editors to install:
 
 **Interactive Installation** (Recommended - will prompt for framework):
+
+> **Note:** macOS users need Bash 4.0+. Install with `brew install bash`, then use `/opt/homebrew/bin/bash` (Apple Silicon) or `/usr/local/bin/bash` (Intel) instead of `bash` in the commands below.
+
 ```bash
+# Linux or modern Bash:
 curl -fsSL https://raw.githubusercontent.com/ulpi-io/agent-library/main/.ulpi/tools/setup.sh | bash
+
+# macOS with Homebrew (Apple Silicon):
+curl -fsSL https://raw.githubusercontent.com/ulpi-io/agent-library/main/.ulpi/tools/setup.sh | /opt/homebrew/bin/bash
+
+# macOS with Homebrew (Intel):
+curl -fsSL https://raw.githubusercontent.com/ulpi-io/agent-library/main/.ulpi/tools/setup.sh | /usr/local/bin/bash
 ```
 
 **Install ALL editors** (default):
