@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # AI Agents Setup Script
 # https://github.com/ulpi-io/agent-library
@@ -15,6 +15,22 @@
 #   --help                Show this help message
 
 set -e
+
+# Check Bash version (requires 4.0+ for associative arrays)
+if [ "${BASH_VERSINFO[0]}" -lt 4 ]; then
+    echo "Error: This script requires Bash 4.0 or higher"
+    echo "Current version: $BASH_VERSION"
+    echo ""
+    echo "On macOS, install modern bash with:"
+    echo "  brew install bash"
+    echo ""
+    echo "Then run the script with:"
+    echo "  /usr/local/bin/bash setup.sh"
+    echo ""
+    echo "Or if using Homebrew on Apple Silicon:"
+    echo "  /opt/homebrew/bin/bash setup.sh"
+    exit 1
+fi
 
 # Colors for output
 RED='\033[0;31m'
