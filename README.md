@@ -37,86 +37,46 @@ Supports: [ULPI](https://ulpi.io) · [Cursor](https://cursor.sh/) · [Amazon Q](
 
 ## Quick Start
 
-### One-Command Installation
+### NPM Installation (Recommended)
 
-Professional installer that downloads only the files you need. Choose which editors to install:
-
-**Interactive Installation** (Recommended - will prompt for framework):
-
-> **Note:** macOS users need Bash 4.0+. Install with `brew install bash`, then use `/opt/homebrew/bin/bash` (Apple Silicon) or `/usr/local/bin/bash` (Intel) instead of `bash` in the commands below.
+Install globally via npm and run the interactive installer:
 
 ```bash
-# Linux or modern Bash:
-curl -fsSL https://raw.githubusercontent.com/ulpi-io/agent-library/main/.ulpi/tools/setup.sh | bash
-
-# macOS with Homebrew (Apple Silicon):
-curl -fsSL https://raw.githubusercontent.com/ulpi-io/agent-library/main/.ulpi/tools/setup.sh | /opt/homebrew/bin/bash
-
-# macOS with Homebrew (Intel):
-curl -fsSL https://raw.githubusercontent.com/ulpi-io/agent-library/main/.ulpi/tools/setup.sh | /usr/local/bin/bash
+npm install -g @ulpi/agent-library
+ulpi-agent-library
 ```
 
-**Install ALL editors** (default):
+**Command-Line Options:**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ulpi-io/agent-library/main/.ulpi/tools/setup.sh | bash
+# Interactive mode (prompts for framework and editors)
+ulpi-agent-library
+
+# Specify framework and editors
+ulpi-agent-library --framework laravel --editors cursor
+
+# Install all editors for Next.js
+ulpi-agent-library --framework nextjs --editors all
+
+# Multiple editors
+ulpi-agent-library --framework express --editors ulpi,cursor,claude
+
+# Custom directory and port
+ulpi-agent-library --target /my/project --port 9000
+
+# Preview without installing
+ulpi-agent-library --framework nestjs --dry-run
+
+# Show help
+ulpi-agent-library --help
 ```
 
-**Install specific editor with framework**:
-```bash
-# Cursor with Laravel
-curl -fsSL https://raw.githubusercontent.com/ulpi-io/agent-library/main/.ulpi/tools/setup.sh | \
-  bash -s -- --editors cursor --framework laravel
-```
-
-```bash
-# Claude Code with Next.js
-curl -fsSL https://raw.githubusercontent.com/ulpi-io/agent-library/main/.ulpi/tools/setup.sh | \
-  bash -s -- --editors claude --framework nextjs
-```
-
-```bash
-# Amazon Q with NestJS
-curl -fsSL https://raw.githubusercontent.com/ulpi-io/agent-library/main/.ulpi/tools/setup.sh | \
-  bash -s -- --editors amazonq --framework nestjs
-```
-
-**Install multiple editors**:
-```bash
-# ULPI and Codex for Expo React Native
-curl -fsSL https://raw.githubusercontent.com/ulpi-io/agent-library/main/.ulpi/tools/setup.sh | \
-  bash -s -- --editors ulpi,codex --framework expo-react-native
-```
-
-**Custom directory**:
-```bash
-# Install Amazon Q in specific directory
-curl -fsSL https://raw.githubusercontent.com/ulpi-io/agent-library/main/.ulpi/tools/setup.sh | \
-  bash -s -- --target /my/project --editors amazonq --framework magento
-```
-
-**Custom Chrome debug port**:
-```bash
-# Install with custom Chrome port
-curl -fsSL https://raw.githubusercontent.com/ulpi-io/agent-library/main/.ulpi/tools/setup.sh | \
-  bash -s -- --port 9000 --editors claude --framework express
-```
-
-**Preview installation** (dry-run):
-```bash
-# Preview what will be installed without installing
-curl -fsSL https://raw.githubusercontent.com/ulpi-io/agent-library/main/.ulpi/tools/setup.sh | \
-  bash -s -- --editors cursor --framework flutter --dry-run
-```
-
-**Common Options:**
-- `--editors` - `all`, `ulpi`, `cursor`, `amazonq`, `claude`, `codex` (comma-separated)
-- `--framework` - `laravel`, `express`, `nestjs`, `nextjs`, `expo-react-native`, `flutter`, `magento`
-- `--target DIR` - Installation directory (default: current)
-- `--port PORT` - Chrome debug port (default: 9222)
+**Options:**
+- `-f, --framework` - `laravel`, `express`, `nestjs`, `nextjs`, `expo-react-native`, `flutter`, `magento`
+- `-e, --editors` - `all`, `ulpi`, `cursor`, `amazonq`, `claude`, `codex` (comma-separated)
+- `-t, --target` - Installation directory (default: current)
+- `-p, --port` - Chrome debug port (default: 9222)
 - `--dry-run` - Preview without installing
-- `--help` - Show full help
-
-**Features:** Interactive selection · Selective downloads · Progress tracking · Dry-run mode · Smart config · Error handling
+- `-h, --help` - Show help
 
 ### Manual Installation
 

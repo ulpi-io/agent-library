@@ -1,0 +1,50 @@
+{
+  "name": "@ulpi/agent-library",
+  "version": "1.0.0",
+  "description": "Professional AI agent configurations for multiple editors and frameworks",
+  "main": "src/index.js",
+  "bin": {
+    "ulpi-agent-library": "./bin/cli.js"
+  },
+  "scripts": {
+    "test": "node bin/cli.js --help"
+  },
+  "keywords": [
+    "ai",
+    "agents",
+    "ulpi",
+    "cursor",
+    "claude",
+    "amazonq",
+    "codex",
+    "laravel",
+    "nextjs",
+    "express",
+    "nestjs",
+    "react-native",
+    "flutter",
+    "magento",
+    "cli"
+  ],
+  "author": "ULPI <noreply@ulpi.io>",
+  "license": "MIT",
+  "homepage": "https://github.com/ulpi-io/agent-library",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ulpi-io/agent-library.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ulpi-io/agent-library/issues"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0",
+    "inquirer": "^8.2.6",
+    "cli-progress": "^3.12.0",
+    "node-fetch": "^2.7.0",
+    "ora": "^5.4.1"
+  }
+}
