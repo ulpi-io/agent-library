@@ -34,6 +34,13 @@ const FILE_MAP = {
     claude: ['.claude/agents/engineering/nextjs-senior-engineer.md'],
     codex: ['.codex/nextjs.md']
   },
+  remix: {
+    ulpi: ['.ulpi/agents/engineering/remix-senior-engineer.yaml'],
+    cursor: ['.cursor/agents/AGENTS.md', '.cursor/agents/remix/AGENTS.md'],
+    amazonq: ['.amazonq/rules/remix.rule.md'],
+    claude: ['.claude/agents/engineering/remix-senior-engineer.md'],
+    codex: ['.codex/remix.md']
+  },
   'expo-react-native': {
     ulpi: ['.ulpi/agents/engineering/expo-react-native-senior-engineer.yaml'],
     cursor: ['.cursor/agents/AGENTS.md', '.cursor/agents/expo-react-native/AGENTS.md'],

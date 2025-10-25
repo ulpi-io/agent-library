@@ -26,6 +26,7 @@ ULPI uses **YAML-based agent configurations** in `.ulpi/agents/engineering/` for
 | [Express.js](../frameworks/express.md) | `.ulpi/agents/engineering/express-senior-engineer.yaml` | REST APIs, middleware, error handling |
 | [NestJS](../frameworks/nestjs.md) | `.ulpi/agents/engineering/nestjs-senior-engineer.yaml` | TypeScript enterprise, DI, Bull queues |
 | [Next.js 14/15](../frameworks/nextjs.md) | `.ulpi/agents/engineering/nextjs-senior-engineer.yaml` | App Router, Server Components, Server Actions |
+| [Remix](../frameworks/remix.md) | `.ulpi/agents/engineering/remix-senior-engineer.yaml` | Full-stack, nested routes, progressive enhancement |
 | [Expo React Native](../frameworks/expo-react-native.md) | `.ulpi/agents/engineering/expo-react-native-senior-engineer.yaml` | Cross-platform mobile, native modules |
 | [Flutter](../frameworks/flutter.md) | `.ulpi/agents/engineering/flutter-senior-engineer.yaml` | Dart patterns, widget architecture |
 | [Magento 2](../frameworks/magento.md) | `.ulpi/agents/engineering/magento-senior-engineer.yaml` | E-commerce, DI, plugins, multi-store |

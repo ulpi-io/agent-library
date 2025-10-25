@@ -27,6 +27,7 @@ Cursor uses hierarchical **AGENTS.md** files that provide context-aware AI assis
 | [Express.js](../frameworks/express.md) | `.cursor/agents/express/AGENTS.md` | REST APIs, middleware, error handling |
 | [NestJS](../frameworks/nestjs.md) | `.cursor/agents/nestjs/AGENTS.md` | TypeScript enterprise, DI, Bull queues |
 | [Next.js 14/15](../frameworks/nextjs.md) | `.cursor/agents/nextjs/AGENTS.md` | App Router, Server Components, Server Actions |
+| [Remix](../frameworks/remix.md) | `.cursor/agents/remix/AGENTS.md` | Full-stack, nested routes, progressive enhancement |
 | [Expo React Native](../frameworks/expo-react-native.md) | `.cursor/agents/expo-react-native/AGENTS.md` | Cross-platform mobile, native modules |
 | [Flutter](../frameworks/flutter.md) | `.cursor/agents/flutter/AGENTS.md` | Dart patterns, widget architecture |
 | [Magento 2](../frameworks/magento.md) | `.cursor/agents/magento/AGENTS.md` | E-commerce, DI, plugins, multi-store |

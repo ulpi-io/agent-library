@@ -26,6 +26,7 @@ Amazon Q uses project-local **rules** (`.rule.md` files) that automatically appl
 | [Express.js](../frameworks/express.md) | `.amazonq/rules/express.rule.md` | REST APIs, middleware, error handling |
 | [NestJS](../frameworks/nestjs.md) | `.amazonq/rules/nestjs.rule.md` | TypeScript enterprise, DI, Bull queues |
 | [Next.js 14/15](../frameworks/nextjs.md) | `.amazonq/rules/nextjs.rule.md` | App Router, Server Components, Server Actions |
+| [Remix](../frameworks/remix.md) | `.amazonq/rules/remix.rule.md` | Full-stack, nested routes, progressive enhancement |
 | [Expo React Native](../frameworks/expo-react-native.md) | `.amazonq/rules/expo-react-native.rule.md` | Cross-platform mobile, native modules |
 | [Flutter](../frameworks/flutter.md) | `.amazonq/rules/flutter.rule.md` | Dart patterns, widget architecture |
 | [Magento 2](../frameworks/magento.md) | `.amazonq/rules/magento.rule.md` | E-commerce, DI, plugins, multi-store |

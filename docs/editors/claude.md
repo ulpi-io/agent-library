@@ -26,6 +26,7 @@ Claude Code uses agent files in `.claude/agents/engineering/` to provide special
 | [Express.js](../frameworks/express.md) | `.claude/agents/engineering/express-senior-engineer.md` | REST APIs, middleware, error handling |
 | [NestJS](../frameworks/nestjs.md) | `.claude/agents/engineering/nestjs-senior-engineer.md` | TypeScript enterprise, DI, Bull queues |
 | [Next.js 14/15](../frameworks/nextjs.md) | `.claude/agents/engineering/nextjs-senior-engineer.md` | App Router, Server Components, Server Actions |
+| [Remix](../frameworks/remix.md) | `.claude/agents/engineering/remix-senior-engineer.md` | Full-stack, nested routes, progressive enhancement |
 | [Expo React Native](../frameworks/expo-react-native.md) | `.claude/agents/engineering/expo-react-native-senior-engineer.md` | Cross-platform mobile, native modules |
 | [Flutter](../frameworks/flutter.md) | `.claude/agents/engineering/flutter-senior-engineer.md` | Dart patterns, widget architecture |
 | [Magento 2](../frameworks/magento.md) | `.claude/agents/engineering/magento-senior-engineer.md` | E-commerce, DI, plugins, multi-store |

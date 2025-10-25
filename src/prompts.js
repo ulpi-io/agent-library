@@ -5,6 +5,7 @@ const FRAMEWORKS = {
   express: { name: 'Express.js', description: 'REST API and middleware patterns' },
   nestjs: { name: 'NestJS', description: 'TypeScript enterprise Node.js framework' },
   nextjs: { name: 'Next.js 14/15', description: 'App Router, Server Components' },
+  remix: { name: 'Remix', description: 'Full-stack web framework with nested routes' },
   'expo-react-native': { name: 'Expo React Native', description: 'Cross-platform mobile' },
   flutter: { name: 'Flutter', description: 'Cross-platform with Dart' },
   magento: { name: 'Magento 2', description: 'E-commerce platform' }

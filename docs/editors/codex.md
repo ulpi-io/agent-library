@@ -26,6 +26,7 @@ GitHub Codex uses the **AGENTS.md** file in your project root to provide AI assi
 | [Express.js](../frameworks/express.md) | `.codex/express.md` | REST APIs, middleware, error handling |
 | [NestJS](../frameworks/nestjs.md) | `.codex/nestjs.md` | TypeScript enterprise, DI, Bull queues |
 | [Next.js 14/15](../frameworks/nextjs.md) | `.codex/nextjs.md` | App Router, Server Components, Server Actions |
+| [Remix](../frameworks/remix.md) | `.codex/remix.md` | Full-stack, nested routes, progressive enhancement |
 | [Expo React Native](../frameworks/expo-react-native.md) | `.codex/expo-react-native.md` | Cross-platform mobile, native modules |
 | [Flutter](../frameworks/flutter.md) | `.codex/flutter.md` | Dart patterns, widget architecture |
 | [Magento 2](../frameworks/magento.md) | `.codex/magento.md` | E-commerce, DI, plugins, multi-store |

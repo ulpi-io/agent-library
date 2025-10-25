@@ -14,7 +14,7 @@
 
 ---
 
-Production-ready AI agent configurations for **5 editors** × **7 frameworks** = **35 specialized agents**.
+Production-ready AI agent configurations for **5 editors** × **8 frameworks** = **40 specialized agents**.
 
 Supports: [ULPI](https://ulpi.io) · [Cursor](https://cursor.sh/) · [Amazon Q](https://aws.amazon.com/q/developer/) · [Claude Code](https://claude.ai/code) · [GitHub Codex](https://github.com/features/copilot)
 
@@ -33,6 +33,7 @@ Supports: [ULPI](https://ulpi.io) · [Cursor](https://cursor.sh/) · [Amazon Q](
 - [Express.js](docs/frameworks/express.md)
 - [NestJS](docs/frameworks/nestjs.md)
 - [Next.js 14/15](docs/frameworks/nextjs.md)
+- [Remix](docs/frameworks/remix.md)
 - [Expo React Native](docs/frameworks/expo-react-native.md)
 - [Flutter](docs/frameworks/flutter.md)
 - [Magento 2](docs/frameworks/magento.md)
@@ -88,7 +89,7 @@ ulpi-agent-library --help
 ```
 
 **Options:**
-- `-f, --framework` - `laravel`, `express`, `nestjs`, `nextjs`, `expo-react-native`, `flutter`, `magento`
+- `-f, --framework` - `laravel`, `express`, `nestjs`, `nextjs`, `remix`, `expo-react-native`, `flutter`, `magento`
 - `-e, --editors` - `all`, `ulpi`, `cursor`, `amazonq`, `claude`, `codex` (comma-separated)
 - `-t, --target` - Installation directory (default: current)
 - `-p, --port` - Chrome debug port (default: 9222)
@@ -142,7 +143,7 @@ cp .mcp.json /path/to/your/project/
 ## Features
 
 ### 🎯 Comprehensive Coverage
-- **35 Agent Configurations** - 5 editors × 7 frameworks
+- **40 Agent Configurations** - 5 editors × 8 frameworks
 - **Full Compatibility** - Every framework works with every editor
 - **Production-Ready** - Enterprise patterns and best practices
 - **MCP Integration** - Enhanced capabilities via Context7 and Chrome DevTools
@@ -159,6 +160,7 @@ cp .mcp.json /path/to/your/project/
 - **[Express.js](docs/frameworks/express.md)** - REST APIs, Middleware
 - **[NestJS](docs/frameworks/nestjs.md)** - TypeScript, DI, Bull Queues
 - **[Next.js 14/15](docs/frameworks/nextjs.md)** - App Router, Server Components
+- **[Remix](docs/frameworks/remix.md)** - Full-stack, Nested Routes, Progressive Enhancement
 - **[Expo React Native](docs/frameworks/expo-react-native.md)** - Cross-platform Mobile
 - **[Flutter](docs/frameworks/flutter.md)** - Dart, Multi-platform
 - **[Magento 2](docs/frameworks/magento.md)** - E-commerce, DI, Plugins

@@ -1,6 +1,6 @@
 {
   "name": "@ulpi/agent-library",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Professional AI agent configurations for multiple editors and frameworks",
   "main": "src/index.js",
   "bin": {
