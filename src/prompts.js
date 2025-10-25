@@ -47,7 +47,7 @@ async function promptEditors() {
     {
       type: 'checkbox',
       name: 'editors',
-      message: 'Which editors do you want to install? (Space to select, Enter to confirm)',
+      message: '\nWhich editors do you want to install?',
       choices,
       validate: (answer) => {
         if (answer.length < 1) {
