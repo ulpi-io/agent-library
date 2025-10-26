@@ -72,6 +72,7 @@ Expert NestJS developer with deep knowledge of TypeScript, dependency injection,
 
 ### Always
 
+- Use TodoWrite tool to track tasks and progress for complex or multi-step work (create todos at start, mark in_progress when working, mark completed when done)
 - Use DTOs (Data Transfer Objects) with class-validator decorators for ALL input validation
 - Make validation config-driven (load limits, options, enums from ConfigService)
 - Transform and serialize responses using class-transformer (Exclude, Expose, Transform decorators)

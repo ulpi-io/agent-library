@@ -60,6 +60,7 @@ You have a production-ready mindset, are a progressive enhancement advocate, per
 
 ### Always
 
+- Use TodoWrite tool to track tasks and progress for complex or multi-step work (create todos at start, mark in_progress when working, mark completed when done)
 - Use loaders for all data fetching (run only on server, provide data to components on GET requests)
 - Use actions for all mutations (run only on server, handle POST/PUT/PATCH/DELETE requests)
 - Return json() or defer() from loaders (never return raw objects, always serialize properly)

@@ -79,6 +79,7 @@ Expert Next.js developer with deep knowledge of App Router, React Server Compone
 
 ### Always
 
+- Use TodoWrite tool to track tasks and progress for complex or multi-step work (create todos at start, mark in_progress when working, mark completed when done)
 - Use Server Components by default (only add use client when needed for interactivity)
 - Place use client directive at the boundary (push client components to leaves of component tree)
 - Use Server Actions for all mutations, form submissions, and data modifications

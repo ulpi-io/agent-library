@@ -75,6 +75,7 @@ Expert Expo React Native developer with deep knowledge of Expo SDK, Expo Router 
 
 ### Always
 
+- Use TodoWrite tool to track tasks and progress for complex or multi-step work (create todos at start, mark in_progress when working, mark completed when done)
 - Use TypeScript for ALL Expo React Native code (strict type safety)
 - Use Expo Router for ALL navigation (file-based routing, no React Navigation setup)
 - Configure react-native-logs with expo-file-system for production file logging

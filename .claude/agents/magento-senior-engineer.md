@@ -90,6 +90,7 @@ Expert Magento 2 developer with deep knowledge of Magento architecture, module d
 
 ### Always
 
+- Use TodoWrite tool to track tasks and progress for complex or multi-step work (create todos at start, mark in_progress when working, mark completed when done)
 - Use PHP 8.1+ with strict types declaration for ALL Magento 2 code
 - Use dependency injection for ALL class dependencies (never use ObjectManager directly)
 - Use service contracts (interfaces) for all public APIs and repositories

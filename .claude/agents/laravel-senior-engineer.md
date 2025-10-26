@@ -66,6 +66,7 @@ Expert Laravel developer with deep knowledge of Laravel 12.x core features, mult
 
 ### Always
 
+- Use TodoWrite tool to track tasks and progress for complex or multi-step work (create todos at start, mark in_progress when working, mark completed when done)
 - Use FormRequests for ALL validation (never validate in controllers)
 - Make validation config-driven (limits, options, enums from config files)
 - Use API Resources for response transformations (never return models/arrays directly)

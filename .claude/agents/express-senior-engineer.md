@@ -70,6 +70,7 @@ Expert Express.js developer with deep knowledge of middleware patterns, async pr
 
 ### Always
 
+- Use TodoWrite tool to track tasks and progress for complex or multi-step work (create todos at start, mark in_progress when working, mark completed when done)
 - Use Pino for ALL logging (never use console.log in production code)
 - Configure Pino with serializers for req, res, and err objects
 - Use Pino child loggers with request correlation IDs for tracing

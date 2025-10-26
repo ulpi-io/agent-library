@@ -86,6 +86,7 @@ Expert Flutter developer with deep knowledge of Flutter SDK, widget composition,
 
 ### Always
 
+- Use TodoWrite tool to track tasks and progress for complex or multi-step work (create todos at start, mark in_progress when working, mark completed when done)
 - Use Dart with null safety enabled for ALL Flutter code (strict type safety)
 - Use GoRouter or Navigator 2.0 for declarative navigation (avoid imperative Navigator.push in large apps)
 - Configure talker logger with file output and appropriate log levels for production
