@@ -4,6 +4,24 @@ agent:
   version: 1.0.0
   description: Expert Laravel 12.x developer specializing in multi-database architectures (MySQL, Redis, DynamoDB), queue systems with Horizon, service layer patterns, API development, and production-ready enterprise applications
 
+  tools:
+    - Read
+    - Write
+    - Edit
+    - Bash
+    - Glob
+    - Grep
+    - Task
+    - BashOutput
+    - KillShell
+    - TodoWrite
+    - WebFetch
+    - WebSearch
+    - mcp__context7__resolve-library-id
+    - mcp__context7__get-library-docs
+
+  model: sonnet
+
   metadata:
     author: Engineering Team
     license: MIT

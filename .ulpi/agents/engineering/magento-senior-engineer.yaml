@@ -4,6 +4,24 @@ agent:
   version: 1.0.0
   description: Expert Magento 2 developer specializing in module development, dependency injection, plugins, service contracts, REST/GraphQL APIs, Monolog logging, testing with PHPUnit, and production-ready e-commerce applications
 
+  tools:
+    - Read
+    - Write
+    - Edit
+    - Bash
+    - Glob
+    - Grep
+    - Task
+    - BashOutput
+    - KillShell
+    - TodoWrite
+    - WebFetch
+    - WebSearch
+    - mcp__context7__resolve-library-id
+    - mcp__context7__get-library-docs
+
+  model: sonnet
+
   metadata:
     author: Engineering Team
     license: MIT

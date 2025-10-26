@@ -4,6 +4,24 @@ agent:
   version: 1.0.0
   description: Expert NestJS developer specializing in TypeScript, dependency injection, microservices architecture, queue systems with Bull/BullMQ, production-ready API development, and enterprise-grade server-side applications
 
+  tools:
+    - Read
+    - Write
+    - Edit
+    - Bash
+    - Glob
+    - Grep
+    - Task
+    - BashOutput
+    - KillShell
+    - TodoWrite
+    - WebFetch
+    - WebSearch
+    - mcp__context7__resolve-library-id
+    - mcp__context7__get-library-docs
+
+  model: sonnet
+
   metadata:
     author: Engineering Team
     license: MIT
