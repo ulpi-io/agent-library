@@ -10,56 +10,56 @@ const FILE_MAP = {
     ulpi: ['.ulpi/agents/engineering/laravel-senior-engineer.yaml'],
     cursor: ['.cursor/agents/AGENTS.md', '.cursor/agents/laravel/AGENTS.md'],
     amazonq: ['.amazonq/rules/laravel.rule.md'],
-    claude: ['.claude/agents/engineering/laravel-senior-engineer.md'],
+    claude: ['.claude/agents/laravel-senior-engineer.md'],
     codex: ['.codex/laravel.md']
   },
   express: {
     ulpi: ['.ulpi/agents/engineering/express-senior-engineer.yaml'],
     cursor: ['.cursor/agents/AGENTS.md', '.cursor/agents/express/AGENTS.md'],
     amazonq: ['.amazonq/rules/express.rule.md'],
-    claude: ['.claude/agents/engineering/express-senior-engineer.md'],
+    claude: ['.claude/agents/express-senior-engineer.md'],
     codex: ['.codex/express.md']
   },
   nestjs: {
     ulpi: ['.ulpi/agents/engineering/nestjs-senior-engineer.yaml'],
     cursor: ['.cursor/agents/AGENTS.md', '.cursor/agents/nestjs/AGENTS.md'],
     amazonq: ['.amazonq/rules/nestjs.rule.md'],
-    claude: ['.claude/agents/engineering/nestjs-senior-engineer.md'],
+    claude: ['.claude/agents/nestjs-senior-engineer.md'],
     codex: ['.codex/nestjs.md']
   },
   nextjs: {
     ulpi: ['.ulpi/agents/engineering/nextjs-senior-engineer.yaml'],
     cursor: ['.cursor/agents/AGENTS.md', '.cursor/agents/nextjs/AGENTS.md'],
     amazonq: ['.amazonq/rules/nextjs.rule.md'],
-    claude: ['.claude/agents/engineering/nextjs-senior-engineer.md'],
+    claude: ['.claude/agents/nextjs-senior-engineer.md'],
     codex: ['.codex/nextjs.md']
   },
   remix: {
     ulpi: ['.ulpi/agents/engineering/remix-senior-engineer.yaml'],
     cursor: ['.cursor/agents/AGENTS.md', '.cursor/agents/remix/AGENTS.md'],
     amazonq: ['.amazonq/rules/remix.rule.md'],
-    claude: ['.claude/agents/engineering/remix-senior-engineer.md'],
+    claude: ['.claude/agents/remix-senior-engineer.md'],
     codex: ['.codex/remix.md']
   },
   'expo-react-native': {
     ulpi: ['.ulpi/agents/engineering/expo-react-native-senior-engineer.yaml'],
     cursor: ['.cursor/agents/AGENTS.md', '.cursor/agents/expo-react-native/AGENTS.md'],
     amazonq: ['.amazonq/rules/expo-react-native.rule.md'],
-    claude: ['.claude/agents/engineering/expo-react-native-senior-engineer.md'],
+    claude: ['.claude/agents/expo-react-native-senior-engineer.md'],
     codex: ['.codex/expo-react-native.md']
   },
   flutter: {
     ulpi: ['.ulpi/agents/engineering/flutter-senior-engineer.yaml'],
     cursor: ['.cursor/agents/AGENTS.md', '.cursor/agents/flutter/AGENTS.md'],
     amazonq: ['.amazonq/rules/flutter.rule.md'],
-    claude: ['.claude/agents/engineering/flutter-senior-engineer.md'],
+    claude: ['.claude/agents/flutter-senior-engineer.md'],
     codex: ['.codex/flutter.md']
   },
   magento: {
     ulpi: ['.ulpi/agents/engineering/magento-senior-engineer.yaml'],
     cursor: ['.cursor/agents/AGENTS.md', '.cursor/agents/magento/AGENTS.md'],
     amazonq: ['.amazonq/rules/magento.rule.md'],
-    claude: ['.claude/agents/engineering/magento-senior-engineer.md'],
+    claude: ['.claude/agents/magento-senior-engineer.md'],
     codex: ['.codex/magento.md']
   }
 };

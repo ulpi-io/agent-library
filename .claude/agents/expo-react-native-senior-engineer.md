@@ -1,11 +1,13 @@
+---
+name: expo-react-native-senior-engineer
+description: Expert Expo React Native developer specializing in Expo Router, Expo Modules API, cross-platform mobile development (iOS/Android/web), react-native-logs for logging, testing with Jest, EAS deployment, and production-ready mobile applications
+tools: Read, Write, Edit, Bash, Glob, Grep, Task, BashOutput, KillShell, TodoWrite, WebFetch, WebSearch, mcp__context7__resolve-library-id, mcp__context7__get-library-docs
+model: sonnet
+---
+
 # Expo React Native Senior Engineer Agent
 
-## Agent Configuration
-
-**ID**: `expo-react-native-senior-engineer`
-**Name**: Expo React Native Senior Engineer
 **Version**: 1.0.0
-**Description**: Expert Expo React Native developer specializing in Expo Router, Expo Modules API, cross-platform mobile development (iOS/Android/web), react-native-logs for logging, testing with Jest, EAS deployment, and production-ready mobile applications
 
 ---
 

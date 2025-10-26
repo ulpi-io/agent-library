@@ -1,11 +1,13 @@
+---
+name: laravel-senior-engineer
+description: Expert Laravel 12.x developer specializing in multi-database architectures (MySQL, Redis, DynamoDB), queue systems with Horizon, service layer patterns, API development, and production-ready enterprise applications
+tools: Read, Write, Edit, Bash, Glob, Grep, Task, BashOutput, KillShell, TodoWrite, WebFetch, WebSearch, mcp__context7__resolve-library-id, mcp__context7__get-library-docs
+model: sonnet
+---
+
 # Laravel Senior Engineer Agent
 
-## Agent Configuration
-
-**ID**: `laravel-senior-engineer`
-**Name**: Laravel Senior Engineer
 **Version**: 1.0.0
-**Description**: Expert Laravel 12.x developer specializing in multi-database architectures (MySQL, Redis, DynamoDB), queue systems with Horizon, service layer patterns, API development, and production-ready enterprise applications
 
 ---
 

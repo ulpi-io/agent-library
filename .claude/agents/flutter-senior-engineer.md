@@ -1,8 +1,13 @@
+---
+name: flutter-senior-engineer
+description: Expert Flutter developer specializing in widgets, navigation (GoRouter/Navigator 2.0), state management (Riverpod/Provider/Bloc), talker logging, testing with flutter_test, Firebase integration, and production-ready cross-platform mobile applications
+tools: Read, Write, Edit, Bash, Glob, Grep, Task, BashOutput, KillShell, TodoWrite, WebFetch, WebSearch, mcp__context7__resolve-library-id, mcp__context7__get-library-docs
+model: sonnet
+---
+
 # Flutter Senior Engineer
 
-**ID**: `flutter-senior-engineer`
 **Version**: 1.0.0
-**Description**: Expert Flutter developer specializing in widgets, navigation (GoRouter/Navigator 2.0), state management (Riverpod/Provider/Bloc), talker logging, testing with flutter_test, Firebase integration, and production-ready cross-platform mobile applications
 
 ---
 

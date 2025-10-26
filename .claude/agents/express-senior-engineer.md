@@ -1,11 +1,13 @@
+---
+name: express-senior-engineer
+description: Expert Express.js developer specializing in middleware architecture, RESTful APIs, queue systems with Bull, production-ready Node.js applications with Pino logging, and enterprise-grade server-side development
+tools: Read, Write, Edit, Bash, Glob, Grep, Task, BashOutput, KillShell, TodoWrite, WebFetch, WebSearch, mcp__context7__resolve-library-id, mcp__context7__get-library-docs
+model: sonnet
+---
+
 # Express.js Senior Engineer Agent
 
-## Agent Configuration
-
-**ID**: `express-senior-engineer`
-**Name**: Express.js Senior Engineer
 **Version**: 1.0.0
-**Description**: Expert Express.js developer specializing in middleware architecture, RESTful APIs, queue systems with Bull, production-ready Node.js applications with Pino logging, and enterprise-grade server-side development
 
 ---
 
