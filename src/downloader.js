@@ -61,6 +61,20 @@ const FILE_MAP = {
     amazonq: ['.amazonq/rules/magento.rule.md'],
     claude: ['.claude/agents/magento-senior-engineer.md'],
     codex: ['.codex/magento.md']
+  },
+  'devops-docker': {
+    ulpi: ['.ulpi/agents/engineering/devops-docker-senior-engineer.yaml'],
+    cursor: ['.cursor/agents/AGENTS.md', '.cursor/agents/devops-docker/AGENTS.md'],
+    amazonq: ['.amazonq/rules/devops-docker.rule.md'],
+    claude: ['.claude/agents/devops-docker-senior-engineer.md'],
+    codex: ['.codex/devops-docker.md']
+  },
+  'devops-aws': {
+    ulpi: ['.ulpi/agents/engineering/devops-aws-senior-engineer.yaml'],
+    cursor: ['.cursor/agents/AGENTS.md', '.cursor/agents/devops-aws/AGENTS.md'],
+    amazonq: ['.amazonq/rules/devops-aws.rule.md'],
+    claude: ['.claude/agents/devops-aws-senior-engineer.md'],
+    codex: ['.codex/devops-aws.md']
   }
 };
 
@@ -154,8 +168,65 @@ function copyCodexAgent(framework, targetDir) {
   return false;
 }
 
+function copyClaudeSkills(skills, targetDir) {
+  const sourceDir = path.join(__dirname, '..', '.claude', 'skills');
+  const targetSkillsDir = path.join(targetDir, '.claude', 'skills');
+
+  let success = 0;
+  let failed = 0;
+
+  // Create target skills directory if it doesn't exist
+  if (!fs.existsSync(targetSkillsDir)) {
+    fs.mkdirSync(targetSkillsDir, { recursive: true });
+  }
+
+  skills.forEach(skill => {
+    const sourceSkillDir = path.join(sourceDir, skill);
+    const targetSkillDir = path.join(targetSkillsDir, skill);
+
+    try {
+      if (fs.existsSync(sourceSkillDir)) {
+        // Copy the entire skill directory recursively
+        copyDirectoryRecursive(sourceSkillDir, targetSkillDir);
+        success++;
+      } else {
+        failed++;
+      }
+    } catch (error) {
+      console.error(`Failed to copy skill ${skill}:`, error.message);
+      failed++;
+    }
+  });
+
+  return { success, failed };
+}
+
+function copyDirectoryRecursive(source, target) {
+  // Create target directory if it doesn't exist
+  if (!fs.existsSync(target)) {
+    fs.mkdirSync(target, { recursive: true });
+  }
+
+  // Read source directory
+  const files = fs.readdirSync(source);
+
+  files.forEach(file => {
+    const sourcePath = path.join(source, file);
+    const targetPath = path.join(target, file);
+
+    if (fs.statSync(sourcePath).isDirectory()) {
+      // Recursively copy subdirectories
+      copyDirectoryRecursive(sourcePath, targetPath);
+    } else {
+      // Copy file
+      fs.copyFileSync(sourcePath, targetPath);
+    }
+  });
+}
+
 module.exports = {
   downloadFiles,
   getFilesToDownload,
-  copyCodexAgent
+  copyCodexAgent,
+  copyClaudeSkills
 };

@@ -11,7 +11,7 @@ program
   .option('-t, --target <dir>', 'target directory', process.cwd())
   .option('-p, --port <number>', 'Chrome debug port', '9222')
   .option('-e, --editors <editors>', 'editors to install (comma-separated): all, ulpi, cursor, amazonq, claude, codex')
-  .option('-f, --framework <framework>', 'framework: laravel, express, nestjs, nextjs, remix, expo-react-native, flutter, magento')
+  .option('-f, --framework <framework>', 'framework: laravel, express, nestjs, nextjs, remix, expo-react-native, flutter, magento, devops-docker, devops-aws')
   .option('--dry-run', 'preview without installing')
   .action(async (options) => {
     try {

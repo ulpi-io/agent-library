@@ -308,32 +308,39 @@ Expert Express.js developer with deep knowledge of middleware patterns, async pr
 
 ### Example 1: Create queue job with Bull
 
-**Task**: Process image uploads with max 5 concurrent jobs, timeout after 10 minutes, retry 3 times
+**Task**: Process image uploads with max 5 concurrent jobs, timeout after 10 minutes, retry 3 times with exponential backoff
 
-**Input**: Process image uploads with max 5 concurrent jobs, timeout after 10 minutes, retry 3 times
+**Input**: Process image uploads with max 5 concurrent jobs, timeout after 10 minutes, retry 3 times with exponential backoff
 
 **Output**:
-```javascript
 Queue setup (queues/imageQueue.js):
-- const Queue = require('bull')
-- const imageQueue = new Queue('image-processing', { redis: { host: 'localhost', port: 6379 } })
+- Import Bull from 'bull' package
+- Create new Queue instance with name 'image-processing' and Redis connection config
 - Configure queue events: on('completed'), on('failed'), on('progress')
+- Export queue instance
 
 Processor (processors/imageProcessor.js):
-- imageQueue.process(5, async (job) => { /* processing logic */ })
-- Set concurrency to 5 concurrent jobs
-- Use job.progress() to report progress
-- Throw errors for retry logic
-- Return result data
+- Import imageQueue from queues
+- Call queue.process() with concurrency 5 and async handler function
+- Handler accepts job parameter with data property
+- Use job.progress() to report progress percentage
+- Throw errors for retry logic activation
+- Return result data on success
+- Log job completion with Pino logger
 
 Job Producer (services/imageService.js):
-- await imageQueue.add({ imageUrl, userId }, { attempts: 3, timeout: 600000, backoff: { type: 'exponential', delay: 2000 } })
+- Import imageQueue from queues
+- Method addImageProcessingJob(imageUrl, userId)
+- Call queue.add() with job data object
+- Configure job options: attempts 3, timeout 600000ms (10 min)
+- Set backoff strategy: type 'exponential', delay 2000ms
+- Return job instance with id
 
 Tests:
-- Mock queue.add() method
-- Assert job data passed correctly
-- Test processor logic independently
-```
+- Mock Bull Queue constructor
+- Mock queue.add() method and verify calls
+- Assert job data structure passed correctly
+- Test processor logic independently with mock job
 
 **Language**: javascript
 
@@ -341,34 +348,41 @@ Tests:
 
 ### Example 2: Configure Pino logger with request correlation IDs
 
-**Task**: Set up structured logging with correlation IDs and request/response logging
+**Task**: Set up structured logging with UUID correlation IDs for request tracing and comprehensive serializers
 
-**Input**: Set up structured logging with correlation IDs and request/response logging
+**Input**: Set up structured logging with UUID correlation IDs for request tracing and comprehensive serializers
 
 **Output**:
-```javascript
 Logger setup (config/logger.js):
-- const pino = require('pino')
-- const logger = pino({ level: process.env.LOG_LEVEL || 'info', prettyPrint: process.env.NODE_ENV !== 'production' })
-- Configure serializers for req, res, err
+- Import pino from 'pino' package
+- Create logger with level from environment (default 'info')
+- Set prettyPrint based on NODE_ENV (false for production)
+- Configure serializers object with req, res, err functions
+- req serializer: extract method, url, headers
+- res serializer: extract statusCode
+- err serializer: extract type, message, stack
+- Export logger instance
 
 HTTP logger middleware (middleware/httpLogger.js):
-- const pinoHttp = require('pino-http')
-- Use pinoHttp({ logger, genReqId: (req) => uuid.v4() })
+- Import pino-http package
+- Import uuid for correlation ID generation
+- Create pinoHttp middleware with logger instance
+- Set genReqId function returning uuid.v4()
 - Attach correlation ID to req.id
-- Log request start and completion with duration
+- Log request start and response completion with duration
+- Export middleware function
 
 Service logging:
-- Inject logger via dependency injection or import
-- Use req.log (child logger) in route handlers
-- req.log.info({ userId, action }, 'User updated')
-- logger.error({ err, userId }, 'Operation failed')
+- Import logger from config
+- In route handlers, use req.log (child logger with correlation ID)
+- Call req.log.info() with object and message
+- Log format: { userId, action }, 'User updated'
+- For errors: req.log.error({ err, userId }, 'Operation failed')
 
 Configuration:
-- Production: JSON structured logs
-- Development: Pretty print with pino-pretty
-- Configure log levels per environment
-```
+- Production: JSON structured logs to stdout
+- Development: Pretty print with pino-pretty transport
+- Configure separate log levels per environment
 
 **Language**: javascript
 
@@ -376,30 +390,47 @@ Configuration:
 
 ### Example 3: Implement Joi validation middleware
 
-**Task**: Create user registration validation with email, password strength, age validation
+**Task**: Create user registration validation with email format, password strength regex, age range, and proper error formatting
 
-**Input**: Create user registration validation with email, password strength, age validation
+**Input**: Create user registration validation with email format, password strength regex, age range, and proper error formatting
 
 **Output**:
-```javascript
 Validation schema (validations/userValidation.js):
-- const Joi = require('joi')
-- const registerSchema = Joi.object({ email: Joi.string().email().required(), password: Joi.string().min(8).pattern(/^(?=.*[A-Za-z])(?=.*\d)/).required(), age: Joi.number().integer().min(18).max(120).required(), name: Joi.string().trim().required() })
+- Import Joi from 'joi' package
+- Define registerSchema with Joi.object()
+- email field: Joi.string().email().required()
+- password field: Joi.string().min(8).pattern(regex for alphanumeric).required()
+- age field: Joi.number().integer().min(18).max(120).required()
+- name field: Joi.string().trim().required()
+- Export registerSchema
 
 Validation middleware (middleware/validate.js):
-- const validate = (schema) => (req, res, next) => { const { error } = schema.validate(req.body, { abortEarly: false }); if (error) return next(new ValidationError(error.details)); next(); }
+- Function validate accepting schema parameter
+- Returns middleware function (req, res, next)
+- Call schema.validate(req.body) with options { abortEarly: false }
+- If error exists, create ValidationError with details
+- Call next(error) to pass to error handler
+- Otherwise call next() to continue
 
 Custom error class (errors/ValidationError.js):
-- class ValidationError extends Error { constructor(details) { super('Validation failed'); this.statusCode = 400; this.errors = details; } }
+- Class ValidationError extends Error
+- Constructor accepts details array
+- Set message to 'Validation failed'
+- Set statusCode property to 400
+- Set errors property to formatted details array
+- Set isOperational to true
 
 Route usage:
-- router.post('/register', validate(registerSchema), userController.register)
+- Import validate middleware and registerSchema
+- Route: router.post('/register', validate(registerSchema), userController.register)
+- Middleware executes before controller
+- Validation errors caught by error handler
 
 Tests:
 - Test valid inputs pass validation
-- Test invalid inputs return 400 with error details
-- Test error message format
-```
+- Test invalid email returns 400 with proper error structure
+- Test weak password returns validation errors
+- Test multiple validation failures return all errors
 
 **Language**: javascript
 
@@ -407,40 +438,55 @@ Tests:
 
 ### Example 4: Implement service layer with repository pattern
 
-**Task**: Create UserService with database operations, caching, and transaction support
+**Task**: Create UserService with CRUD operations, Redis caching, database transactions, and proper error handling
 
-**Input**: Create UserService with database operations, caching, and transaction support
+**Input**: Create UserService with CRUD operations, Redis caching, database transactions, and proper error handling
 
 **Output**:
-```javascript
-User model (models/User.js):
-- Sequelize model with fields, validations, associations
-- Define relationships: hasMany, belongsTo
-
 User repository (repositories/UserRepository.js):
-- class UserRepository with methods: findById, findByEmail, create, update, delete
-- Use Sequelize query methods with proper error handling
-- Implement complex queries with include, where, order
+- Class UserRepository with dependency injection
+- Constructor accepts database connection/model
+- Method findById(id): query by primary key
+- Method findByEmail(email): query with where clause
+- Method create(data): insert new record with transaction support
+- Method update(id, data): update record with where clause
+- Method delete(id): soft delete or hard delete
+- All methods use Sequelize query methods
+- Implement proper error handling with try-catch
+- Return null for not found instead of throwing
 
 User service (services/UserService.js):
-- Inject UserRepository and logger
-- async findById(id): Check cache first, query DB if miss, store in cache
-- async create(data): Validate, start transaction, create user, commit
-- async update(id, data): Start transaction, update, invalidate cache, commit
-- Handle errors with custom error classes
+- Class UserService with injected dependencies
+- Constructor accepts UserRepository, RedisClient, Logger
+- Method findById(id): check Redis cache first with key pattern user:{id}
+- If cache miss, query via repository
+- Store result in cache with TTL 3600 seconds
+- Return user object or null
+- Method create(data): validate data structure
+- Start database transaction
+- Call repository.create() within transaction
+- Commit transaction on success
+- Rollback on error
+- Method update(id, data): start transaction
+- Call repository.update() with data
+- Invalidate Redis cache for user:{id}
+- Commit transaction
+- Handle errors with custom error classes (NotFoundError, ValidationError)
 
 Cache layer:
-- const redis = require('redis').createClient()
-- Cache key pattern: user:{id}
-- TTL: 3600 seconds
-- Invalidate on write operations
+- Import redis and create client
+- Helper method getCacheKey(id): return 'user:' + id
+- Helper method getFromCache(key): redis.get() with JSON.parse
+- Helper method setCache(key, value, ttl): redis.setex() with JSON.stringify
+- Helper method invalidateCache(key): redis.del()
 
 Tests:
-- Mock repository methods
-- Mock Redis client
-- Test service logic independently
-- Test transaction rollback on errors
-```
+- Mock UserRepository methods with jest.fn()
+- Mock Redis client methods
+- Test findById cache hit and miss scenarios
+- Test create with transaction commit
+- Test update with cache invalidation
+- Test error scenarios with transaction rollback
 
 **Language**: javascript
 
@@ -448,34 +494,60 @@ Tests:
 
 ### Example 5: Create custom error handling middleware
 
-**Task**: Global error handler for structured API error responses
+**Task**: Global error handler with custom error classes, structured responses, proper logging, and environment-based detail exposure
 
-**Input**: Global error handler for structured API error responses
+**Input**: Global error handler with custom error classes, structured responses, proper logging, and environment-based detail exposure
 
 **Output**:
-```javascript
 Custom error classes (errors/):
-- class AppError extends Error { constructor(message, statusCode) { super(message); this.statusCode = statusCode; this.isOperational = true; } }
-- class NotFoundError extends AppError { constructor(resource) { super(`${resource} not found`, 404); } }
-- class ValidationError extends AppError { constructor(details) { super('Validation failed', 400); this.errors = details; } }
+- Base class AppError extends Error
+- Constructor accepts message and statusCode parameters
+- Set isOperational property to true
+- Capture stack trace with Error.captureStackTrace
+- Class NotFoundError extends AppError
+- Constructor accepts resource name
+- Set message to '{resource} not found' and statusCode 404
+- Class ValidationError extends AppError
+- Constructor accepts details array
+- Set message to 'Validation failed', statusCode 400, errors property
 
 Error middleware (middleware/errorHandler.js):
-- function errorHandler(err, req, res, next) { req.log.error({ err, url: req.url }, 'Request error'); const statusCode = err.statusCode || 500; const message = err.isOperational ? err.message : 'Internal server error'; res.status(statusCode).json({ status: 'error', statusCode, message, errors: err.errors, timestamp: new Date().toISOString(), path: req.path }); }
+- Function errorHandler with 4 parameters: err, req, res, next
+- Log error with req.log.error() including err object, url, method
+- Extract statusCode from err.statusCode or default 500
+- Determine if error is operational via err.isOperational
+- For operational errors: use err.message
+- For non-operational: use 'Internal server error' in production
+- Build response object with status, statusCode, message
+- Add errors array if present (validation errors)
+- Add timestamp with new Date().toISOString()
+- Add path with req.path
+- In development only: add stack trace to response
+- Call res.status(statusCode).json(response)
 
 Async wrapper (utils/asyncHandler.js):
-- const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
+- Function asyncHandler accepting async function
+- Returns function (req, res, next)
+- Wraps fn(req, res, next) in Promise.resolve()
+- Catch errors with .catch(next) to pass to error middleware
+- Simplifies async route handlers
 
 Route usage:
-- router.get('/users/:id', asyncHandler(async (req, res) => { const user = await userService.findById(req.params.id); if (!user) throw new NotFoundError('User'); res.json(user); }))
+- Import asyncHandler and custom errors
+- Wrap async routes: router.get('/users/:id', asyncHandler(async (req, res) => {...}))
+- Throw custom errors: if (!user) throw new NotFoundError('User')
+- Error automatically caught and passed to middleware
 
 Register middleware:
-- app.use(errorHandler) // Last middleware
+- app.use(errorHandler) as LAST middleware after all routes
+- Ensures all errors are caught
 
 Tests:
-- Test error response format
-- Test different error types
-- Test operational vs programming errors
-```
+- Test error response structure includes all required fields
+- Test operational errors use custom message
+- Test non-operational errors hide details in production
+- Test validation errors include errors array
+- Test stack trace only included in development
 
 **Language**: javascript
 
@@ -483,36 +555,60 @@ Tests:
 
 ### Example 6: Implement Passport JWT authentication
 
-**Task**: JWT authentication with access and refresh tokens
+**Task**: JWT authentication with access tokens, refresh tokens, Passport strategy, and protected route middleware
 
-**Input**: JWT authentication with access and refresh tokens
+**Input**: JWT authentication with access tokens, refresh tokens, Passport strategy, and protected route middleware
 
 **Output**:
-```javascript
 Passport strategy (config/passport.js):
-- const JwtStrategy = require('passport-jwt').Strategy
-- const ExtractJwt = require('passport-jwt').ExtractJwt
-- passport.use(new JwtStrategy({ jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), secretOrKey: process.env.JWT_SECRET }, async (payload, done) => { const user = await userService.findById(payload.sub); return done(null, user || false); }))
+- Import passport, JwtStrategy, ExtractJwt from packages
+- Import User model or service
+- Create options object with jwtFromRequest and secretOrKey
+- Set jwtFromRequest to ExtractJwt.fromAuthHeaderAsBearerToken()
+- Set secretOrKey from environment variable JWT_SECRET
+- Define strategy callback function (payload, done)
+- Extract user ID from payload.sub
+- Query user via service or repository
+- If user found: call done(null, user)
+- If not found: call done(null, false)
+- Register strategy: passport.use(new JwtStrategy(options, callback))
+- Export passport instance
 
 Auth service (services/authService.js):
-- const jwt = require('jsonwebtoken')
-- async login(email, password): Validate credentials, generate JWT with payload { sub: user.id, email }
-- async refreshToken(token): Validate refresh token, issue new access token
-- generateToken(payload, expiresIn): jwt.sign(payload, secret, { expiresIn })
+- Import jsonwebtoken package
+- Import bcrypt for password hashing
+- Inject UserService and logger
+- Method login(email, password): query user by email
+- Verify password with bcrypt.compare()
+- If invalid: throw AuthenticationError
+- Generate access token with payload { sub: user.id, email: user.email }
+- Set expiration to 15 minutes
+- Generate refresh token with longer expiration (7 days)
+- Return { accessToken, refreshToken, user }
+- Method refreshToken(token): verify refresh token with jwt.verify()
+- Extract user ID from payload
+- Generate new access token
+- Return new accessToken
+- Method generateToken(payload, expiresIn): call jwt.sign() with secret and options
 
 Auth middleware (middleware/authenticate.js):
-- const authenticate = passport.authenticate('jwt', { session: false })
+- Import passport from config
+- Export authenticate function: passport.authenticate('jwt', { session: false })
+- Middleware attaches user to req.user if valid token
 
 Routes:
-- router.post('/login', authController.login)
-- router.post('/refresh', authController.refresh)
-- router.get('/profile', authenticate, userController.profile)
+- POST /auth/login: call authController.login
+- POST /auth/refresh: call authController.refresh with refresh token
+- GET /users/profile: protected with authenticate middleware
+- Route definition: router.get('/profile', authenticate, userController.profile)
 
 Tests:
-- Mock passport.authenticate
-- Test token generation and validation
-- Test protected routes require valid JWT
-```
+- Mock passport.authenticate middleware
+- Test token generation returns valid JWT
+- Test token validation with valid and invalid tokens
+- Test protected routes reject requests without token
+- Test protected routes accept valid tokens
+- Mock jwt.sign() and jwt.verify() functions
 
 **Language**: javascript
 
@@ -520,36 +616,69 @@ Tests:
 
 ### Example 7: Set up database with Sequelize and migrations
 
-**Task**: Configure PostgreSQL with Sequelize, create User model and migration
+**Task**: Configure PostgreSQL with Sequelize ORM, create User model with validations, and implement migrations
 
-**Input**: Configure PostgreSQL with Sequelize, create User model and migration
+**Input**: Configure PostgreSQL with Sequelize ORM, create User model with validations, and implement migrations
 
 **Output**:
-```javascript
 Sequelize config (config/database.js):
-- module.exports = { development: { username: process.env.DB_USER, password: process.env.DB_PASS, database: process.env.DB_NAME, host: process.env.DB_HOST, dialect: 'postgres', pool: { max: 5, min: 0, acquire: 30000, idle: 10000 } } }
+- Export configuration object with environment keys
+- development environment: username, password, database from env vars
+- Set host from DB_HOST env var
+- Set dialect to 'postgres'
+- Configure pool options: max 5, min 0, acquire 30000ms, idle 10000ms
+- production environment: use DATABASE_URL with dialectOptions ssl
+- test environment: separate test database
+
+Database connection (config/sequelize.js):
+- Import Sequelize from 'sequelize' package
+- Import config from database.js
+- Get current environment from NODE_ENV
+- Create Sequelize instance with config[env]
+- Export sequelize instance
+- Test connection with sequelize.authenticate()
 
 User model (models/User.js):
-- module.exports = (sequelize, DataTypes) => { const User = sequelize.define('User', { id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true }, email: { type: DataTypes.STRING, unique: true, allowNull: false, validate: { isEmail: true } }, passwordHash: { type: DataTypes.STRING, allowNull: false }, name: { type: DataTypes.STRING }, createdAt: DataTypes.DATE, updatedAt: DataTypes.DATE }); return User; }
+- Define model function accepting sequelize and DataTypes
+- Define User model with sequelize.define('User', attributes)
+- id field: type UUID, defaultValue UUIDV4, primaryKey true
+- email field: type STRING, unique true, allowNull false, validate { isEmail: true }
+- passwordHash field: type STRING, allowNull false
+- name field: type STRING
+- createdAt and updatedAt timestamps
+- Define associations in associate method if needed
+- Return User model
 
-Migration:
-- npx sequelize-cli migration:generate --name create-user
-- up(): queryInterface.createTable('Users', { id: { type: Sequelize.UUID, primaryKey: true }, ... })
-- down(): queryInterface.dropTable('Users')
+Models index (models/index.js):
+- Import all model files dynamically
+- Initialize each model with sequelize instance
+- Call associate method on models if defined
+- Export db object with sequelize and all models
+
+Migration creation:
+- Run: npx sequelize-cli migration:generate --name create-users-table
+- Edit migration file in migrations/ directory
+- Define up() method: use queryInterface.createTable()
+- Define table structure matching model
+- Define down() method: use queryInterface.dropTable('Users')
 
 Run migrations:
-- npx sequelize-cli db:migrate
+- Development: npx sequelize-cli db:migrate
+- Production: run migrations in deployment script
+- Rollback: npx sequelize-cli db:migrate:undo
 
-Usage:
-- const { User } = require('./models')
-- await User.findByPk(id)
-- await User.create({ email, passwordHash, name })
+Usage in services:
+- Import models: const { User } = require('../models')
+- Query: await User.findByPk(id)
+- Create: await User.create({ email, passwordHash, name })
+- Update: await user.update(data)
+- Delete: await user.destroy()
 
 Tests:
-- Use separate test database
-- Run migrations before tests
-- Clean database after each test
-```
+- Use separate test database configuration
+- Run migrations before test suite with beforeAll hook
+- Truncate tables or run migrations:undo between tests
+- Close database connection in afterAll hook
 
 **Language**: javascript
 
@@ -557,36 +686,69 @@ Tests:
 
 ### Example 8: Set up comprehensive testing suite
 
-**Task**: Integration tests for API endpoints and unit tests for services
+**Task**: Integration tests for API endpoints with Supertest and unit tests for services with Jest mocking
 
-**Input**: Integration tests for API endpoints and unit tests for services
+**Input**: Integration tests for API endpoints with Supertest and unit tests for services with Jest mocking
 
 **Output**:
-```javascript
-Integration test (tests/integration/user.test.js):
-- const request = require('supertest')
-- const app = require('../../app')
-- describe('User API', () => { test('POST /api/users - creates user', async () => { const res = await request(app).post('/api/users').send({ email: 'test@example.com', password: 'Test1234', name: 'Test User' }).expect(201); expect(res.body).toHaveProperty('id'); }); })
-
-Unit test (tests/unit/userService.test.js):
-- const UserService = require('../../services/UserService')
-- const userRepository = { findById: jest.fn(), create: jest.fn() }
-- const userService = new UserService(userRepository, logger)
-- test('findById returns user', async () => { userRepository.findById.mockResolvedValue({ id: '123', email: 'test@example.com' }); const user = await userService.findById('123'); expect(user.email).toBe('test@example.com'); })
+Jest configuration (jest.config.js):
+- Set testEnvironment to 'node'
+- Configure testMatch patterns for test files
+- Set coverageDirectory to 'coverage'
+- Configure coverageThreshold: statements 80%, branches 80%
+- Set setupFilesAfterEnv to point to test setup file
+- Configure collectCoverageFrom patterns
 
 Test setup (tests/setup.js):
-- Set up test database
-- Run migrations
-- Clear data before each test
+- Import database connection
+- Run migrations in beforeAll hook
+- Set NODE_ENV to 'test'
+- Configure test database cleanup
+- Set longer timeout for database operations
+- Close connections in afterAll hook
 
-Coverage:
-- npm test -- --coverage
-- Configure coverage thresholds in jest.config.js
+Integration test (tests/integration/user.test.js):
+- Import supertest and express app
+- Import test database utilities
+- Use describe block for 'User API' suite
+- Before each test: clear User table
+- Test POST /api/users endpoint: create user with valid data
+- Use request(app).post('/api/users').send(userData)
+- Assert response status 201
+- Assert response body contains id and email
+- Assert password is not returned
+- Test GET /api/users/:id: fetch created user
+- Test validation errors return 400 with error details
+- Test authentication required for protected endpoints
 
-Mocking:
-- Mock Bull queue: jest.mock('bull')
-- Mock Redis client
-- Mock external services
-```
+Unit test (tests/unit/userService.test.js):
+- Import UserService class
+- Create mock repository with jest.fn() methods
+- Create mock logger with jest.fn() methods
+- Create mock Redis client
+- Instantiate UserService with mocks
+- Test findById with cache hit scenario
+- Mock redis.get() to return cached user
+- Assert repository not called when cache hit
+- Test findById with cache miss scenario
+- Mock redis.get() to return null
+- Mock repository.findById() to return user
+- Assert user stored in cache with setex()
+- Test create method with transaction
+- Mock repository.create() to return created user
+- Assert transaction committed
+- Test error handling with transaction rollback
+
+Mocking patterns:
+- Mock Bull queue: jest.mock('bull', () => mockQueue)
+- Mock Redis client with jest.fn() methods
+- Mock external API calls with jest.spyOn()
+- Use jest.resetAllMocks() in beforeEach
+
+Running tests:
+- npm test: run all tests
+- npm test -- --coverage: generate coverage report
+- npm test -- --watch: watch mode for development
+- Configure CI/CD to run tests and check coverage thresholds
 
 **Language**: javascript

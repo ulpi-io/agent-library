@@ -8,7 +8,9 @@ const FRAMEWORKS = {
   remix: { name: 'Remix', description: 'Full-stack web framework with nested routes' },
   'expo-react-native': { name: 'Expo React Native', description: 'Cross-platform mobile' },
   flutter: { name: 'Flutter', description: 'Cross-platform with Dart' },
-  magento: { name: 'Magento 2', description: 'E-commerce platform' }
+  magento: { name: 'Magento 2', description: 'E-commerce platform' },
+  'devops-docker': { name: 'DevOps Docker', description: 'Containerization, Docker Compose, orchestration' },
+  'devops-aws': { name: 'DevOps AWS', description: 'Cloud architecture, IaC, serverless, CI/CD' }
 };
 
 const EDITORS = {
@@ -17,6 +19,14 @@ const EDITORS = {
   amazonq: { name: 'Amazon Q', description: 'Project-local .rule.md files' },
   claude: { name: 'Claude Code', description: 'Markdown agent files' },
   codex: { name: 'GitHub Codex', description: 'Root AGENTS.md format' }
+};
+
+const CLAUDE_SKILLS = {
+  'writing-agents': { name: 'Writing Agents', description: 'Create and sync agent configurations' },
+  'writing-tools': { name: 'Writing Tools', description: 'Create effective skills with TDD methodology' },
+  'start': { name: 'Start', description: 'Skill discovery and usage workflows' },
+  'run-parallel-agents-feature-build': { name: 'Parallel Agents (Build)', description: 'Build independent features in parallel' },
+  'run-parallel-agents-feature-debug': { name: 'Parallel Agents (Debug)', description: 'Debug independent issues in parallel' }
 };
 
 async function promptFramework() {
@@ -62,11 +72,39 @@ async function promptEditors() {
   return editors;
 }
 
+async function promptClaudeSkills() {
+  const choices = Object.entries(CLAUDE_SKILLS).map(([key, value]) => ({
+    name: `${value.name} - ${value.description}`,
+    value: key,
+    checked: true
+  }));
+
+  const { skills } = await inquirer.prompt([
+    {
+      type: 'checkbox',
+      name: 'skills',
+      message: '\nWhich Claude skills do you want to install?',
+      choices,
+      validate: (answer) => {
+        if (answer.length < 1) {
+          return 'You must choose at least one skill.';
+        }
+        return true;
+      }
+    }
+  ]);
+
+  return skills;
+}
+
 async function confirmInstallation(config) {
   console.log('\n📦 Installation Summary:');
   console.log('━'.repeat(50));
   console.log(`Framework:  ${FRAMEWORKS[config.framework].name}`);
   console.log(`Editors:    ${config.editors.map(e => EDITORS[e].name).join(', ')}`);
+  if (config.claudeSkills && config.claudeSkills.length > 0) {
+    console.log(`Skills:     ${config.claudeSkills.map(s => CLAUDE_SKILLS[s].name).join(', ')}`);
+  }
   console.log(`Target:     ${config.target}`);
   console.log(`Port:       ${config.port}`);
   console.log('━'.repeat(50));
@@ -86,7 +124,9 @@ async function confirmInstallation(config) {
 module.exports = {
   promptFramework,
   promptEditors,
+  promptClaudeSkills,
   confirmInstallation,
   FRAMEWORKS,
-  EDITORS
+  EDITORS,
+  CLAUDE_SKILLS
 };

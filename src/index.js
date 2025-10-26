@@ -1,6 +1,6 @@
 const chalk = require('chalk');
-const { promptFramework, promptEditors, confirmInstallation, FRAMEWORKS } = require('./prompts');
-const { downloadFiles, copyCodexAgent } = require('./downloader');
+const { promptFramework, promptEditors, promptClaudeSkills, confirmInstallation, FRAMEWORKS } = require('./prompts');
+const { downloadFiles, copyCodexAgent, copyClaudeSkills } = require('./downloader');
 const { setupMcpServers } = require('./config');
 
 async function run(options) {
@@ -35,6 +35,12 @@ async function run(options) {
     editors = editors.split(',').map(e => e.trim());
   }
 
+  // Prompt for Claude skills if Claude is selected
+  let claudeSkills = [];
+  if (editors.includes('claude')) {
+    claudeSkills = await promptClaudeSkills();
+  }
+
   // Validate framework
   if (!FRAMEWORKS[framework]) {
     throw new Error(`Invalid framework: ${framework}`);
@@ -51,6 +57,7 @@ async function run(options) {
   const config = {
     framework,
     editors,
+    claudeSkills,
     target,
     port: port || '9222',
     dryRun
@@ -79,6 +86,18 @@ async function run(options) {
       console.log(chalk.green(`✓ Created AGENTS.md from ${framework} agent`));
     } else {
       console.log(chalk.red(`✗ Could not find .codex/${framework}.md`));
+    }
+  }
+
+  // Copy Claude skills if needed
+  if (editors.includes('claude') && claudeSkills.length > 0) {
+    console.log('\n🔧 Installing Claude skills...');
+    const skillsResult = copyClaudeSkills(claudeSkills, target);
+    if (skillsResult.success > 0) {
+      console.log(chalk.green(`✓ Installed ${skillsResult.success}/${claudeSkills.length} skills`));
+    }
+    if (skillsResult.failed > 0) {
+      console.log(chalk.red(`✗ Failed to install ${skillsResult.failed} skills`));
     }
   }
 

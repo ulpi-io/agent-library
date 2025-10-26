@@ -311,7 +311,6 @@ Expert NestJS developer with deep knowledge of TypeScript, dependency injection,
 **Input**: Process video uploads with max 5 concurrent jobs, timeout after 10 minutes, retry 3 times
 
 **Output**:
-```typescript
 Queue Module (video.module.ts):
 - Import BullModule.registerQueue({ name: 'video' })
 - Register VideoProcessor as provider
@@ -331,7 +330,6 @@ Job Producer (video.service.ts):
 Tests:
 - Mock queue with getQueueToken('video')
 - Assert job.add() called with correct params
-```
 
 **Language**: typescript
 
@@ -344,7 +342,6 @@ Tests:
 **Input**: Set up structured logging with correlation IDs and request context
 
 **Output**:
-```typescript
 Logger Module (logger.module.ts):
 - Create LoggerModule as global module
 - Provide custom Pino logger factory
@@ -367,7 +364,6 @@ Service logging:
 
 Configuration (main.ts):
 - const logger = pino({ level: 'info', prettyPrint: process.env.NODE_ENV !== 'production' })
-```
 
 **Language**: typescript
 
@@ -380,7 +376,6 @@ Configuration (main.ts):
 **Input**: Create user registration DTO with email, password strength, age validation
 
 **Output**:
-```typescript
 Create DTO (create-user.dto.ts):
 - class CreateUserDto with decorators
 - @IsEmail() for email validation
@@ -405,7 +400,6 @@ Global Pipe (main.ts):
 Tests:
 - Test valid and invalid inputs
 - Assert ValidationError thrown with correct messages
-```
 
 **Language**: typescript
 
@@ -418,7 +412,6 @@ Tests:
 **Input**: Create UserService with database operations and caching
 
 **Output**:
-```typescript
 User Entity (user.entity.ts):
 - @Entity() class with TypeORM decorators
 - @PrimaryGeneratedColumn(), @Column(), @CreateDateColumn()
@@ -446,7 +439,6 @@ Tests:
 - Create testing module with mocked repository
 - Use { provide: getRepositoryToken(User), useValue: mockRepository }
 - Assert methods called with correct params
-```
 
 **Language**: typescript
 
@@ -459,7 +451,6 @@ Tests:
 **Input**: Global exception filter for structured API error responses
 
 **Output**:
-```typescript
 Exception Filter (http-exception.filter.ts):
 - @Catch(HttpException) decorator
 - Implement ExceptionFilter interface
@@ -484,7 +475,6 @@ Usage in service:
 Tests:
 - Mock ArgumentsHost and response
 - Assert correct status code and error format
-```
 
 **Language**: typescript
 
@@ -497,7 +487,6 @@ Tests:
 **Input**: JWT authentication with access tokens and refresh tokens
 
 **Output**:
-```typescript
 Auth Module (auth.module.ts):
 - Import JwtModule.register({ secret, signOptions: { expiresIn: '15m' } })
 - Import PassportModule
@@ -530,7 +519,6 @@ Custom decorator @CurrentUser():
 Tests:
 - Mock JwtService and UserService
 - Test token generation and validation
-```
 
 **Language**: typescript
 
@@ -543,7 +531,6 @@ Tests:
 **Input**: Configure PostgreSQL with TypeORM, create User entity and migration
 
 **Output**:
-```typescript
 Configuration (app.module.ts):
 - TypeOrmModule.forRootAsync({ useFactory: (config: ConfigService) => ({ type: 'postgres', host: config.get('DB_HOST'), ... }) })
 
@@ -574,7 +561,6 @@ Tests:
 - Use in-memory SQLite for tests
 - Run migrations before tests
 - Clean database after each test
-```
 
 **Language**: typescript
 
@@ -587,7 +573,6 @@ Tests:
 **Input**: Create notification microservice with message patterns and event patterns
 
 **Output**:
-```typescript
 Microservice Bootstrap (main.ts):
 - const app = await NestFactory.createMicroservice(AppModule, { transport: Transport.REDIS, options: { host: 'localhost', port: 6379 } })
 - await app.listen()
@@ -614,7 +599,6 @@ Hybrid application:
 Tests:
 - Mock ClientProxy with { provide: 'NOTIFICATION_SERVICE', useValue: { send: jest.fn(), emit: jest.fn() } }
 - Assert send/emit called with correct pattern and data
-```
 
 **Language**: typescript
 
@@ -627,7 +611,6 @@ Tests:
 **Input**: Unit tests for services, e2e tests for API endpoints with test database
 
 **Output**:
-```typescript
 Unit Test (user.service.spec.ts):
 - describe('UserService')
 - beforeEach: create testing module with mocked dependencies
@@ -658,6 +641,5 @@ Mocking:
 - Mock external services (HTTP clients, queue, email service)
 - Use jest.mock() for module mocking
 - Create factory functions for test data
-```
 
 **Language**: typescript
