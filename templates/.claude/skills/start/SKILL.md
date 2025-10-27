@@ -20,14 +20,13 @@ This is not negotiable. This is not optional. You cannot rationalize your way ou
 
 Before responding to **ANY** user message, you **MUST** complete this checklist:
 
-1. ☐ List all available skills in your mind
-2. ☐ Ask yourself: "Does **ANY** skill match this request?"
-3. ☐ If yes → Use the Skill tool to read and run the skill file
-4. ☐ Announce which skill you're using
-5. ☐ Determine the **correct specialized agent persona** for the task domain
-6. ☐ If a specialized agent is needed → Invoke that agent using the Task tool and delegate the work
-7. ☐ Follow the skill workflow exactly
-8. ☐ If the skill has checklists → Create TodoWrite todos for **EACH** checklist item
+1. ☐ Ask yourself: "Does **ANY** skill match this request?"
+2. ☐ If yes → Use the Skill tool to read and run the skill file
+3. ☐ Announce which skill you're using
+4. ☐ Determine the **correct specialized agent persona** for the task domain
+5. ☐ If a specialized agent is needed → Invoke that agent using the Task tool and delegate the work
+6. ☐ Follow the skill workflow exactly
+7. ☐ If the skill has checklists → Create TodoWrite todos for **EACH** checklist item
 
 **Responding WITHOUT completing this checklist = automatic failure.**
 
@@ -139,6 +138,40 @@ See `references/agent_matching_logic.md` for comprehensive agent catalog, detail
 - "This is just one thing"
 
 **Why:** Clear, specific instructions are precisely WHEN workflows matter most.
+
+## When This Skill Is Invoked
+
+**When the user explicitly invokes this skill (e.g., "use start skill"), you MUST first:**
+
+1. **Discover all available skills** - Look at the `<available_skills>` section in your system prompt and extract all skill names and descriptions
+2. **Discover all available agents** - Look at the Task tool description in your system prompt and extract all available agent types (subagent_type options)
+3. **Output to the user** - Present a complete, explicit list of discovered skills and agents
+4. **Create a mental map** - Internalize this inventory for future reference throughout the conversation
+
+**This discovery step only happens when the skill is explicitly invoked, not for every task.**
+
+**How to discover:**
+- **Skills**: Read from `<available_skills>` section → list each `<name>` and `<description>`
+- **Agents**: Read from Task tool parameters → list each subagent_type option from the agent catalog
+
+**Example output format:**
+```
+I'm using the start skill. Let me first discover and show you what's available:
+
+**Available Skills:**
+[Dynamically list from <available_skills>]
+- skill-name: Description
+- skill-name: Description
+...
+
+**Available Agents:**
+[Dynamically list from Task tool agent types]
+- agent-name: Description
+- agent-name: Description
+...
+
+Now, let's proceed with your task...
+```
 
 ## Core Workflow
 
