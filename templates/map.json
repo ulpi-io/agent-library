@@ -372,6 +372,26 @@
             "destination": ".claude/claude-md-refs/project-commands.md"
           }
         ]
+      },
+      "expo-react-native": {
+        "main": {
+          "source": "templates/.claude/framework-claude-md/expo-react-native/CLAUDE.md",
+          "destination": "CLAUDE.md"
+        },
+        "refs": [
+          {
+            "source": "templates/.claude/framework-claude-md/expo-react-native/claude-md-refs/architecture.md",
+            "destination": ".claude/claude-md-refs/architecture.md"
+          },
+          {
+            "source": "templates/.claude/framework-claude-md/expo-react-native/claude-md-refs/conventions.md",
+            "destination": ".claude/claude-md-refs/conventions.md"
+          },
+          {
+            "source": "templates/.claude/framework-claude-md/expo-react-native/claude-md-refs/project-commands.md",
+            "destination": ".claude/claude-md-refs/project-commands.md"
+          }
+        ]
       }
     }
   }
