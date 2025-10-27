@@ -13,6 +13,7 @@ program
   .option('-e, --editors <editors>', 'editors to install (comma-separated): all, ulpi, cursor, amazonq, claude, codex')
   .option('-f, --framework <framework>', 'framework: laravel, express, nestjs, nextjs, remix, expo-react-native, flutter, magento, devops-docker, devops-aws')
   .option('--dry-run', 'preview without installing')
+  .option('-y, --yes', 'skip confirmation prompts')
   .action(async (options) => {
     try {
       await run(options);

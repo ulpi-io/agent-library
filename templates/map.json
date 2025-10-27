@@ -1,0 +1,345 @@
+{
+  "version": "1.0.0",
+  "editors": ["ulpi", "cursor", "amazonq", "claude", "codex"],
+  "frameworks": ["laravel", "express", "nestjs", "nextjs", "remix", "expo-react-native", "flutter", "magento", "devops-docker", "devops-aws"],
+  "files": {
+    "tools": [
+      {
+        "source": "templates/.ulpi/tools/launch-chrome-debug.sh",
+        "destination": ".ulpi/tools/launch-chrome-debug.sh",
+        "editors": ["all"]
+      }
+    ],
+    "agents": {
+      "ulpi": {
+        "laravel": {
+          "source": "templates/.ulpi/agents/engineering/laravel-senior-engineer.yaml",
+          "destination": ".ulpi/agents/engineering/laravel-senior-engineer.yaml"
+        },
+        "express": {
+          "source": "templates/.ulpi/agents/engineering/express-senior-engineer.yaml",
+          "destination": ".ulpi/agents/engineering/express-senior-engineer.yaml"
+        },
+        "nestjs": {
+          "source": "templates/.ulpi/agents/engineering/nestjs-senior-engineer.yaml",
+          "destination": ".ulpi/agents/engineering/nestjs-senior-engineer.yaml"
+        },
+        "nextjs": {
+          "source": "templates/.ulpi/agents/engineering/nextjs-senior-engineer.yaml",
+          "destination": ".ulpi/agents/engineering/nextjs-senior-engineer.yaml"
+        },
+        "remix": {
+          "source": "templates/.ulpi/agents/engineering/remix-senior-engineer.yaml",
+          "destination": ".ulpi/agents/engineering/remix-senior-engineer.yaml"
+        },
+        "expo-react-native": {
+          "source": "templates/.ulpi/agents/engineering/expo-react-native-senior-engineer.yaml",
+          "destination": ".ulpi/agents/engineering/expo-react-native-senior-engineer.yaml"
+        },
+        "flutter": {
+          "source": "templates/.ulpi/agents/engineering/flutter-senior-engineer.yaml",
+          "destination": ".ulpi/agents/engineering/flutter-senior-engineer.yaml"
+        },
+        "magento": {
+          "source": "templates/.ulpi/agents/engineering/magento-senior-engineer.yaml",
+          "destination": ".ulpi/agents/engineering/magento-senior-engineer.yaml"
+        },
+        "devops-docker": {
+          "source": "templates/.ulpi/agents/engineering/devops-docker-senior-engineer.yaml",
+          "destination": ".ulpi/agents/engineering/devops-docker-senior-engineer.yaml"
+        },
+        "devops-aws": {
+          "source": "templates/.ulpi/agents/engineering/devops-aws-senior-engineer.yaml",
+          "destination": ".ulpi/agents/engineering/devops-aws-senior-engineer.yaml"
+        }
+      },
+      "cursor": {
+        "laravel": [
+          {
+            "source": "templates/.cursor/agents/AGENTS.md",
+            "destination": ".cursor/agents/AGENTS.md"
+          },
+          {
+            "source": "templates/.cursor/agents/laravel/AGENTS.md",
+            "destination": ".cursor/agents/laravel/AGENTS.md"
+          }
+        ],
+        "express": [
+          {
+            "source": "templates/.cursor/agents/AGENTS.md",
+            "destination": ".cursor/agents/AGENTS.md"
+          },
+          {
+            "source": "templates/.cursor/agents/express/AGENTS.md",
+            "destination": ".cursor/agents/express/AGENTS.md"
+          }
+        ],
+        "nestjs": [
+          {
+            "source": "templates/.cursor/agents/AGENTS.md",
+            "destination": ".cursor/agents/AGENTS.md"
+          },
+          {
+            "source": "templates/.cursor/agents/nestjs/AGENTS.md",
+            "destination": ".cursor/agents/nestjs/AGENTS.md"
+          }
+        ],
+        "nextjs": [
+          {
+            "source": "templates/.cursor/agents/AGENTS.md",
+            "destination": ".cursor/agents/AGENTS.md"
+          },
+          {
+            "source": "templates/.cursor/agents/nextjs/AGENTS.md",
+            "destination": ".cursor/agents/nextjs/AGENTS.md"
+          }
+        ],
+        "remix": [
+          {
+            "source": "templates/.cursor/agents/AGENTS.md",
+            "destination": ".cursor/agents/AGENTS.md"
+          },
+          {
+            "source": "templates/.cursor/agents/remix/AGENTS.md",
+            "destination": ".cursor/agents/remix/AGENTS.md"
+          }
+        ],
+        "expo-react-native": [
+          {
+            "source": "templates/.cursor/agents/AGENTS.md",
+            "destination": ".cursor/agents/AGENTS.md"
+          },
+          {
+            "source": "templates/.cursor/agents/expo-react-native/AGENTS.md",
+            "destination": ".cursor/agents/expo-react-native/AGENTS.md"
+          }
+        ],
+        "flutter": [
+          {
+            "source": "templates/.cursor/agents/AGENTS.md",
+            "destination": ".cursor/agents/AGENTS.md"
+          },
+          {
+            "source": "templates/.cursor/agents/flutter/AGENTS.md",
+            "destination": ".cursor/agents/flutter/AGENTS.md"
+          }
+        ],
+        "magento": [
+          {
+            "source": "templates/.cursor/agents/AGENTS.md",
+            "destination": ".cursor/agents/AGENTS.md"
+          },
+          {
+            "source": "templates/.cursor/agents/magento/AGENTS.md",
+            "destination": ".cursor/agents/magento/AGENTS.md"
+          }
+        ],
+        "devops-docker": [
+          {
+            "source": "templates/.cursor/agents/AGENTS.md",
+            "destination": ".cursor/agents/AGENTS.md"
+          },
+          {
+            "source": "templates/.cursor/agents/devops-docker/AGENTS.md",
+            "destination": ".cursor/agents/devops-docker/AGENTS.md"
+          }
+        ],
+        "devops-aws": [
+          {
+            "source": "templates/.cursor/agents/AGENTS.md",
+            "destination": ".cursor/agents/AGENTS.md"
+          },
+          {
+            "source": "templates/.cursor/agents/devops-aws/AGENTS.md",
+            "destination": ".cursor/agents/devops-aws/AGENTS.md"
+          }
+        ]
+      },
+      "amazonq": {
+        "laravel": {
+          "source": "templates/.amazonq/rules/laravel.rule.md",
+          "destination": ".amazonq/rules/laravel.rule.md"
+        },
+        "express": {
+          "source": "templates/.amazonq/rules/express.rule.md",
+          "destination": ".amazonq/rules/express.rule.md"
+        },
+        "nestjs": {
+          "source": "templates/.amazonq/rules/nestjs.rule.md",
+          "destination": ".amazonq/rules/nestjs.rule.md"
+        },
+        "nextjs": {
+          "source": "templates/.amazonq/rules/nextjs.rule.md",
+          "destination": ".amazonq/rules/nextjs.rule.md"
+        },
+        "remix": {
+          "source": "templates/.amazonq/rules/remix.rule.md",
+          "destination": ".amazonq/rules/remix.rule.md"
+        },
+        "expo-react-native": {
+          "source": "templates/.amazonq/rules/expo-react-native.rule.md",
+          "destination": ".amazonq/rules/expo-react-native.rule.md"
+        },
+        "flutter": {
+          "source": "templates/.amazonq/rules/flutter.rule.md",
+          "destination": ".amazonq/rules/flutter.rule.md"
+        },
+        "magento": {
+          "source": "templates/.amazonq/rules/magento.rule.md",
+          "destination": ".amazonq/rules/magento.rule.md"
+        },
+        "devops-docker": {
+          "source": "templates/.amazonq/rules/devops-docker.rule.md",
+          "destination": ".amazonq/rules/devops-docker.rule.md"
+        },
+        "devops-aws": {
+          "source": "templates/.amazonq/rules/devops-aws.rule.md",
+          "destination": ".amazonq/rules/devops-aws.rule.md"
+        }
+      },
+      "claude": {
+        "laravel": {
+          "source": "templates/.claude/agents/laravel-senior-engineer.md",
+          "destination": ".claude/agents/laravel-senior-engineer.md"
+        },
+        "express": {
+          "source": "templates/.claude/agents/express-senior-engineer.md",
+          "destination": ".claude/agents/express-senior-engineer.md"
+        },
+        "nestjs": {
+          "source": "templates/.claude/agents/nestjs-senior-engineer.md",
+          "destination": ".claude/agents/nestjs-senior-engineer.md"
+        },
+        "nextjs": {
+          "source": "templates/.claude/agents/nextjs-senior-engineer.md",
+          "destination": ".claude/agents/nextjs-senior-engineer.md"
+        },
+        "remix": {
+          "source": "templates/.claude/agents/remix-senior-engineer.md",
+          "destination": ".claude/agents/remix-senior-engineer.md"
+        },
+        "expo-react-native": {
+          "source": "templates/.claude/agents/expo-react-native-senior-engineer.md",
+          "destination": ".claude/agents/expo-react-native-senior-engineer.md"
+        },
+        "flutter": {
+          "source": "templates/.claude/agents/flutter-senior-engineer.md",
+          "destination": ".claude/agents/flutter-senior-engineer.md"
+        },
+        "magento": {
+          "source": "templates/.claude/agents/magento-senior-engineer.md",
+          "destination": ".claude/agents/magento-senior-engineer.md"
+        },
+        "devops-docker": {
+          "source": "templates/.claude/agents/devops-docker-senior-engineer.md",
+          "destination": ".claude/agents/devops-docker-senior-engineer.md"
+        },
+        "devops-aws": {
+          "source": "templates/.claude/agents/devops-aws-senior-engineer.md",
+          "destination": ".claude/agents/devops-aws-senior-engineer.md"
+        }
+      },
+      "codex": {
+        "laravel": {
+          "source": "templates/.codex/laravel.md",
+          "destination": ".codex/laravel.md"
+        },
+        "express": {
+          "source": "templates/.codex/express.md",
+          "destination": ".codex/express.md"
+        },
+        "nestjs": {
+          "source": "templates/.codex/nestjs.md",
+          "destination": ".codex/nestjs.md"
+        },
+        "nextjs": {
+          "source": "templates/.codex/nextjs.md",
+          "destination": ".codex/nextjs.md"
+        },
+        "remix": {
+          "source": "templates/.codex/remix.md",
+          "destination": ".codex/remix.md"
+        },
+        "expo-react-native": {
+          "source": "templates/.codex/expo-react-native.md",
+          "destination": ".codex/expo-react-native.md"
+        },
+        "flutter": {
+          "source": "templates/.codex/flutter.md",
+          "destination": ".codex/flutter.md"
+        },
+        "magento": {
+          "source": "templates/.codex/magento.md",
+          "destination": ".codex/magento.md"
+        },
+        "devops-docker": {
+          "source": "templates/.codex/devops-docker.md",
+          "destination": ".codex/devops-docker.md"
+        },
+        "devops-aws": {
+          "source": "templates/.codex/devops-aws.md",
+          "destination": ".codex/devops-aws.md"
+        }
+      }
+    },
+    "claude-skills": [
+      {
+        "key": "writing-agents",
+        "name": "Writing Agents",
+        "description": "Create and sync agent configurations",
+        "source": "templates/.claude/skills/writing-agents",
+        "destination": ".claude/skills/writing-agents",
+        "recursive": true
+      },
+      {
+        "key": "writing-tools",
+        "name": "Writing Tools",
+        "description": "Create effective skills with TDD methodology",
+        "source": "templates/.claude/skills/writing-tools",
+        "destination": ".claude/skills/writing-tools",
+        "recursive": true
+      },
+      {
+        "key": "start",
+        "name": "Start",
+        "description": "Skill discovery and usage workflows",
+        "source": "templates/.claude/skills/start",
+        "destination": ".claude/skills/start",
+        "recursive": true
+      },
+      {
+        "key": "run-parallel-agents-feature-build",
+        "name": "Parallel Agents (Build)",
+        "description": "Build independent features in parallel",
+        "source": "templates/.claude/skills/run-parallel-agents-feature-build",
+        "destination": ".claude/skills/run-parallel-agents-feature-build",
+        "recursive": true
+      },
+      {
+        "key": "run-parallel-agents-feature-debug",
+        "name": "Parallel Agents (Debug)",
+        "description": "Debug independent issues in parallel",
+        "source": "templates/.claude/skills/run-parallel-agents-feature-debug",
+        "destination": ".claude/skills/run-parallel-agents-feature-debug",
+        "recursive": true
+      },
+      {
+        "key": "update-claude-md-after-install",
+        "name": "Update Claude MD After Install",
+        "description": "Update CLAUDE.md after installation",
+        "source": "templates/.claude/skills/update-claude-md-after-install",
+        "destination": ".claude/skills/update-claude-md-after-install",
+        "recursive": true
+      }
+    ],
+    "claude-md": {
+      "laravel": {
+        "main": {
+          "source": "templates/.claude/framework-claude-md/laravel/CLAUDE.md",
+          "destination": "CLAUDE.md"
+        },
+        "refs": []
+      }
+    }
+  }
+}

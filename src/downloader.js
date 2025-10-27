@@ -5,97 +5,12 @@ const ora = require('ora');
 
 const REPO_URL = 'https://raw.githubusercontent.com/ulpi-io/agent-library/main';
 
-const FILE_MAP = {
-  laravel: {
-    ulpi: ['.ulpi/agents/engineering/laravel-senior-engineer.yaml'],
-    cursor: ['.cursor/agents/AGENTS.md', '.cursor/agents/laravel/AGENTS.md'],
-    amazonq: ['.amazonq/rules/laravel.rule.md'],
-    claude: ['.claude/agents/laravel-senior-engineer.md'],
-    codex: ['.codex/laravel.md']
-  },
-  express: {
-    ulpi: ['.ulpi/agents/engineering/express-senior-engineer.yaml'],
-    cursor: ['.cursor/agents/AGENTS.md', '.cursor/agents/express/AGENTS.md'],
-    amazonq: ['.amazonq/rules/express.rule.md'],
-    claude: ['.claude/agents/express-senior-engineer.md'],
-    codex: ['.codex/express.md']
-  },
-  nestjs: {
-    ulpi: ['.ulpi/agents/engineering/nestjs-senior-engineer.yaml'],
-    cursor: ['.cursor/agents/AGENTS.md', '.cursor/agents/nestjs/AGENTS.md'],
-    amazonq: ['.amazonq/rules/nestjs.rule.md'],
-    claude: ['.claude/agents/nestjs-senior-engineer.md'],
-    codex: ['.codex/nestjs.md']
-  },
-  nextjs: {
-    ulpi: ['.ulpi/agents/engineering/nextjs-senior-engineer.yaml'],
-    cursor: ['.cursor/agents/AGENTS.md', '.cursor/agents/nextjs/AGENTS.md'],
-    amazonq: ['.amazonq/rules/nextjs.rule.md'],
-    claude: ['.claude/agents/nextjs-senior-engineer.md'],
-    codex: ['.codex/nextjs.md']
-  },
-  remix: {
-    ulpi: ['.ulpi/agents/engineering/remix-senior-engineer.yaml'],
-    cursor: ['.cursor/agents/AGENTS.md', '.cursor/agents/remix/AGENTS.md'],
-    amazonq: ['.amazonq/rules/remix.rule.md'],
-    claude: ['.claude/agents/remix-senior-engineer.md'],
-    codex: ['.codex/remix.md']
-  },
-  'expo-react-native': {
-    ulpi: ['.ulpi/agents/engineering/expo-react-native-senior-engineer.yaml'],
-    cursor: ['.cursor/agents/AGENTS.md', '.cursor/agents/expo-react-native/AGENTS.md'],
-    amazonq: ['.amazonq/rules/expo-react-native.rule.md'],
-    claude: ['.claude/agents/expo-react-native-senior-engineer.md'],
-    codex: ['.codex/expo-react-native.md']
-  },
-  flutter: {
-    ulpi: ['.ulpi/agents/engineering/flutter-senior-engineer.yaml'],
-    cursor: ['.cursor/agents/AGENTS.md', '.cursor/agents/flutter/AGENTS.md'],
-    amazonq: ['.amazonq/rules/flutter.rule.md'],
-    claude: ['.claude/agents/flutter-senior-engineer.md'],
-    codex: ['.codex/flutter.md']
-  },
-  magento: {
-    ulpi: ['.ulpi/agents/engineering/magento-senior-engineer.yaml'],
-    cursor: ['.cursor/agents/AGENTS.md', '.cursor/agents/magento/AGENTS.md'],
-    amazonq: ['.amazonq/rules/magento.rule.md'],
-    claude: ['.claude/agents/magento-senior-engineer.md'],
-    codex: ['.codex/magento.md']
-  },
-  'devops-docker': {
-    ulpi: ['.ulpi/agents/engineering/devops-docker-senior-engineer.yaml'],
-    cursor: ['.cursor/agents/AGENTS.md', '.cursor/agents/devops-docker/AGENTS.md'],
-    amazonq: ['.amazonq/rules/devops-docker.rule.md'],
-    claude: ['.claude/agents/devops-docker-senior-engineer.md'],
-    codex: ['.codex/devops-docker.md']
-  },
-  'devops-aws': {
-    ulpi: ['.ulpi/agents/engineering/devops-aws-senior-engineer.yaml'],
-    cursor: ['.cursor/agents/AGENTS.md', '.cursor/agents/devops-aws/AGENTS.md'],
-    amazonq: ['.amazonq/rules/devops-aws.rule.md'],
-    claude: ['.claude/agents/devops-aws-senior-engineer.md'],
-    codex: ['.codex/devops-aws.md']
-  }
-};
-
-function getFilesToDownload(framework, editors) {
-  const files = new Set();
-
-  // Always download Chrome launch script
-  files.add('.ulpi/tools/launch-chrome-debug.sh');
-
-  // Add framework-specific files for each editor
-  editors.forEach(editor => {
-    const editorFiles = FILE_MAP[framework]?.[editor] || [];
-    editorFiles.forEach(file => files.add(file));
-  });
-
-  return Array.from(files);
-}
-
-async function downloadFile(filePath, targetDir) {
-  const url = `${REPO_URL}/${filePath}`;
-  const fullPath = path.join(targetDir, filePath);
+/**
+ * Download a single file from map entry
+ */
+async function downloadFileFromMap(mapEntry, targetDir) {
+  const url = `${REPO_URL}/${mapEntry.source}`;
+  const fullPath = path.join(targetDir, mapEntry.destination);
 
   // Create directory if it doesn't exist
   const dir = path.dirname(fullPath);
@@ -106,44 +21,45 @@ async function downloadFile(filePath, targetDir) {
   const response = await fetch(url);
 
   if (!response.ok) {
-    throw new Error(`Failed to download ${filePath}: ${response.statusText}`);
+    throw new Error(`Failed to download ${mapEntry.source}: ${response.statusText}`);
   }
 
   const content = await response.text();
   fs.writeFileSync(fullPath, content);
 
   // Make shell scripts executable
-  if (filePath.endsWith('.sh')) {
+  if (mapEntry.source.endsWith('.sh')) {
     fs.chmodSync(fullPath, '755');
   }
 
   return fullPath;
 }
 
-async function downloadFiles(framework, editors, targetDir, dryRun = false) {
-  const files = getFilesToDownload(framework, editors);
-
+/**
+ * Download files from map entries
+ */
+async function downloadFilesFromMap(mapEntries, targetDir, dryRun = false) {
   if (dryRun) {
     console.log('\n🔍 Dry Run - Files that would be downloaded:');
-    files.forEach(file => console.log(`  📄 ${file}`));
-    return { total: files.length, downloaded: 0 };
+    mapEntries.forEach(entry => console.log(`  📄 ${entry.destination}`));
+    return { total: mapEntries.length, downloaded: 0, failed: 0 };
   }
 
-  console.log(`\n📥 Downloading ${files.length} files...`);
+  console.log(`\n📥 Downloading ${mapEntries.length} files...`);
 
   let downloaded = 0;
   const failed = [];
 
-  for (const file of files) {
-    const spinner = ora(`Downloading ${file}`).start();
+  for (const entry of mapEntries) {
+    const spinner = ora(`Downloading ${entry.destination}`).start();
 
     try {
-      await downloadFile(file, targetDir);
-      spinner.succeed(`Downloaded ${file}`);
+      await downloadFileFromMap(entry, targetDir);
+      spinner.succeed(`Downloaded ${entry.destination}`);
       downloaded++;
     } catch (error) {
-      spinner.fail(`Failed to download ${file}`);
-      failed.push({ file, error: error.message });
+      spinner.fail(`Failed to download ${entry.destination}`);
+      failed.push({ file: entry.destination, error: error.message });
     }
   }
 
@@ -154,9 +70,34 @@ async function downloadFiles(framework, editors, targetDir, dryRun = false) {
     });
   }
 
-  return { total: files.length, downloaded, failed: failed.length };
+  return { total: mapEntries.length, downloaded, failed: failed.length };
 }
 
+/**
+ * Download CLAUDE.md files from map
+ */
+async function downloadCLAUDEmdFromMap(claudeMdFiles, targetDir) {
+  if (!claudeMdFiles || claudeMdFiles.length === 0) {
+    return false;
+  }
+
+  let downloaded = false;
+
+  for (const file of claudeMdFiles) {
+    try {
+      await downloadFileFromMap(file, targetDir);
+      downloaded = true;
+    } catch (error) {
+      // File doesn't exist, skip
+    }
+  }
+
+  return downloaded;
+}
+
+/**
+ * Copy Codex agent to root AGENTS.md
+ */
 function copyCodexAgent(framework, targetDir) {
   const sourceFile = path.join(targetDir, `.codex/${framework}.md`);
   const targetFile = path.join(targetDir, 'AGENTS.md');
@@ -168,65 +109,87 @@ function copyCodexAgent(framework, targetDir) {
   return false;
 }
 
-function copyClaudeSkills(skills, targetDir) {
-  const sourceDir = path.join(__dirname, '..', '.claude', 'skills');
-  const targetSkillsDir = path.join(targetDir, '.claude', 'skills');
-
+/**
+ * Copy Claude skills from map
+ */
+async function copyClaudeSkillsFromMap(selectedSkills, allSkills, targetDir) {
   let success = 0;
   let failed = 0;
 
-  // Create target skills directory if it doesn't exist
+  const targetSkillsDir = path.join(targetDir, '.claude', 'skills');
+
+  // Create target skills directory
   if (!fs.existsSync(targetSkillsDir)) {
     fs.mkdirSync(targetSkillsDir, { recursive: true });
   }
 
-  skills.forEach(skill => {
-    const sourceSkillDir = path.join(sourceDir, skill);
-    const targetSkillDir = path.join(targetSkillsDir, skill);
+  for (const skillKey of selectedSkills) {
+    // Find skill in map
+    const skill = allSkills.find(s => s.key === skillKey);
+    if (!skill) {
+      failed++;
+      continue;
+    }
 
     try {
-      if (fs.existsSync(sourceSkillDir)) {
-        // Copy the entire skill directory recursively
-        copyDirectoryRecursive(sourceSkillDir, targetSkillDir);
-        success++;
-      } else {
-        failed++;
-      }
+      // Download skill folder recursively
+      const targetSkillDir = path.join(targetDir, skill.destination);
+      await downloadFolderFromGitHub(skill.source, targetSkillDir);
+      success++;
     } catch (error) {
-      console.error(`Failed to copy skill ${skill}:`, error.message);
+      console.error(`Failed to copy skill ${skillKey}:`, error.message);
       failed++;
     }
-  });
+  }
 
   return { success, failed };
 }
 
-function copyDirectoryRecursive(source, target) {
-  // Create target directory if it doesn't exist
-  if (!fs.existsSync(target)) {
-    fs.mkdirSync(target, { recursive: true });
-  }
+/**
+ * Download entire folder from GitHub recursively
+ */
+async function downloadFolderFromGitHub(sourceFolder, targetFolder) {
+  const apiUrl = `https://api.github.com/repos/ulpi-io/agent-library/contents/${sourceFolder}`;
 
-  // Read source directory
-  const files = fs.readdirSync(source);
-
-  files.forEach(file => {
-    const sourcePath = path.join(source, file);
-    const targetPath = path.join(target, file);
-
-    if (fs.statSync(sourcePath).isDirectory()) {
-      // Recursively copy subdirectories
-      copyDirectoryRecursive(sourcePath, targetPath);
-    } else {
-      // Copy file
-      fs.copyFileSync(sourcePath, targetPath);
+  const response = await fetch(apiUrl, {
+    headers: {
+      'Accept': 'application/vnd.github.v3+json',
+      'User-Agent': 'ulpi-agent-library'
     }
   });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch folder contents: ${response.statusText}`);
+  }
+
+  const contents = await response.json();
+
+  // Create target folder
+  if (!fs.existsSync(targetFolder)) {
+    fs.mkdirSync(targetFolder, { recursive: true });
+  }
+
+  for (const item of contents) {
+    if (item.type === 'file') {
+      // Download file
+      const fileResponse = await fetch(item.download_url);
+      if (fileResponse.ok) {
+        const content = await fileResponse.text();
+        const targetPath = path.join(targetFolder, item.name);
+        fs.writeFileSync(targetPath, content);
+      }
+    } else if (item.type === 'dir') {
+      // Recursively download subdirectory
+      const subTargetFolder = path.join(targetFolder, item.name);
+      await downloadFolderFromGitHub(item.path, subTargetFolder);
+    }
+  }
 }
 
 module.exports = {
-  downloadFiles,
-  getFilesToDownload,
+  downloadFileFromMap,
+  downloadFilesFromMap,
+  downloadCLAUDEmdFromMap,
   copyCodexAgent,
-  copyClaudeSkills
+  copyClaudeSkillsFromMap
 };
