@@ -352,6 +352,26 @@
             "destination": ".claude/claude-md-refs/project-commands.md"
           }
         ]
+      },
+      "express": {
+        "main": {
+          "source": "templates/.claude/framework-claude-md/express/CLAUDE.md",
+          "destination": "CLAUDE.md"
+        },
+        "refs": [
+          {
+            "source": "templates/.claude/framework-claude-md/express/claude-md-refs/architecture.md",
+            "destination": ".claude/claude-md-refs/architecture.md"
+          },
+          {
+            "source": "templates/.claude/framework-claude-md/express/claude-md-refs/conventions.md",
+            "destination": ".claude/claude-md-refs/conventions.md"
+          },
+          {
+            "source": "templates/.claude/framework-claude-md/express/claude-md-refs/project-commands.md",
+            "destination": ".claude/claude-md-refs/project-commands.md"
+          }
+        ]
       }
     }
   }
