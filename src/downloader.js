@@ -88,7 +88,8 @@ async function downloadCLAUDEmdFromMap(claudeMdFiles, targetDir) {
       await downloadFileFromMap(file, targetDir);
       downloaded = true;
     } catch (error) {
-      // File doesn't exist, skip
+      // File doesn't exist, skip silently
+      console.error(`Failed to download ${file.destination}: ${error.message}`);
     }
   }
 
