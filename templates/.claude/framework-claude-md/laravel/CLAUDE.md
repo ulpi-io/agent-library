@@ -6,19 +6,19 @@ Framework-specific guidelines and conventions for Laravel 12.x development with 
 
 **Purpose:** Provides Laravel 12.x framework best practices and conventions. This is your starting point for any Laravel project.
 
-**Scope:** Universal Laravel patterns that apply to all projects. For project-specific decisions (queue drivers, cache drivers, database choices), customize the files in `.claude/claude-md-refs/`.
+**Scope:** Universal Laravel patterns that apply to all projects. Project-specific decisions (queue drivers, cache drivers, database choices) are documented in `.claude/claude-md-refs/`.
 
 **Token Management:** If you want to reduce token usage, comment out sections you don't use.
 
 ---
 
-## Project-Specific Customization
+## Project Documentation
 
-Customize these files for your project:
+Additional project-specific guidance is available in:
 
-- **@.claude/claude-md-refs/project-commands.md** - Your custom artisan commands and deployment scripts
-- **@.claude/claude-md-refs/architecture.md** - Your architecture decisions (queue driver, cache driver, database, etc.)
-- **@.claude/claude-md-refs/conventions.md** - Your team conventions (git workflow, code review, etc.)
+- **@.claude/claude-md-refs/project-commands.md** - Project commands and deployment workflows
+- **@.claude/claude-md-refs/architecture.md** - Architecture decisions and patterns
+- **@.claude/claude-md-refs/conventions.md** - Team conventions and standards
 
 ---
 
