@@ -4,27 +4,25 @@ Framework-specific guidelines and conventions for Laravel 12.x development with 
 
 ## About This File
 
-**Purpose:** This file provides Laravel 12.x framework conventions and best practices that load automatically with Claude Code. It serves as a quick reference to prevent repetitive questions about Laravel patterns.
+**Purpose:** Provides Laravel 12.x framework best practices and conventions. This is your starting point for any Laravel project.
 
-**Scope:** Contains generic Laravel framework guidance. Project-specific guidance (custom commands, architecture decisions, team conventions) is imported from `.claude/claude-md-refs/` - customize those files for your project.
+**Scope:** Universal Laravel patterns that apply to all projects. For project-specific decisions (queue drivers, cache drivers, database choices), customize the files in `.claude/claude-md-refs/`.
 
-**Token Management:** This file is comprehensive by design. If you want to reduce token usage, comment out sections you don't use (e.g., if not using queues, comment out the Queue System section).
-
-**Review Periodically:** Update this file as your project evolves to ensure Claude Code uses current information.
+**Token Management:** If you want to reduce token usage, comment out sections you don't use.
 
 ---
 
-## Project-Specific Guidance
+## Project-Specific Customization
 
-The following files provide project-specific guidance. Customize them for your team:
+Customize these files for your project:
 
-- **@.claude/claude-md-refs/project-commands.md** - Custom artisan commands, deployment workflows, monitoring scripts
-- **@.claude/claude-md-refs/architecture.md** - Architecture decisions, multi-tenancy strategy, API design, queue configuration
-- **@.claude/claude-md-refs/conventions.md** - Team conventions, git workflow, code review standards, testing requirements
+- **@.claude/claude-md-refs/project-commands.md** - Your custom artisan commands and deployment scripts
+- **@.claude/claude-md-refs/architecture.md** - Your architecture decisions (queue driver, cache driver, database, etc.)
+- **@.claude/claude-md-refs/conventions.md** - Your team conventions (git workflow, code review, etc.)
 
 ---
 
-## Project Commands
+## Standard Laravel Commands
 
 ### Development
 - `php artisan serve` - Start development server
@@ -32,8 +30,6 @@ The following files provide project-specific guidance. Customize them for your t
 - `php artisan migrate:fresh --seed` - Fresh migration with seeders
 - `php artisan db:seed` - Run database seeders
 - `php artisan queue:work` - Start queue worker
-- `php artisan horizon` - Start Laravel Horizon dashboard and workers
-- `php artisan horizon:pause` / `php artisan horizon:continue` - Control Horizon workers
 - `php artisan cache:clear` - Clear application cache
 - `php artisan config:clear` - Clear configuration cache
 - `php artisan route:list` - List all registered routes
@@ -42,7 +38,6 @@ The following files provide project-specific guidance. Customize them for your t
 - `php artisan test` - Run PHPUnit/Pest test suite
 - `php artisan test --parallel` - Run tests in parallel
 - `php artisan test --coverage` - Generate code coverage report
-- `vendor/bin/pest --filter TestName` - Run specific test
 
 ### Code Quality
 - `./vendor/bin/pint` - Run Laravel Pint (PSR-12 code formatter)
@@ -104,7 +99,7 @@ public function store(StoreUserRequest $request): JsonResponse
 
 ### Service Layer Pattern
 - All business logic lives in service classes
-- Use constructor injection for dependencies (avoid facades)
+- Use constructor injection for dependencies
 - Implement single responsibility principle
 - Return models, collections, or throw exceptions
 - Type hint all parameters and return types
@@ -117,6 +112,12 @@ class UserService
         private readonly Cache $cache,
         private readonly Log $log,
     ) {}
+
+    public function createUser(array $data): User
+    {
+        // Business logic here
+        return $this->userRepository->create($data);
+    }
 }
 ```
 
@@ -126,28 +127,9 @@ class UserService
 - Return models or collections
 - Implement interfaces for testability
 
-## Database Guidelines
+## Database Best Practices
 
-### Multi-Database Configuration
-- MySQL/PostgreSQL: Primary relational data
-- Redis: Caching, sessions, queue driver
-- DynamoDB: NoSQL data (use `aws/aws-sdk-php-laravel`)
-
-```php
-// config/database.php
-'connections' => [
-    'mysql' => [...],
-    'dynamodb' => [
-        'driver' => 'dynamodb',
-        'key' => env('AWS_ACCESS_KEY_ID'),
-        'secret' => env('AWS_SECRET_ACCESS_KEY'),
-        'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
-        'table' => env('DYNAMODB_CACHE_TABLE', 'cache'),
-    ],
-],
-```
-
-### Eloquent Best Practices
+### Eloquent
 - Always eager load relationships with `with()` to prevent N+1 queries
 - Use `firstOrFail()` and `findOrFail()` for 404 handling
 - Use scopes for reusable query logic
@@ -190,32 +172,13 @@ Schema::create('users', function (Blueprint $table) {
 
 ## Queue System
 
-### Laravel Horizon Configuration
-- Use Redis as queue driver: `QUEUE_CONNECTION=redis`
-- Configure Horizon supervisors in `config/horizon.php`
-- Set auto-scaling with minProcesses and maxProcesses
-- Use named supervisors for different queue types
-- Monitor queue metrics via Horizon dashboard: `/horizon`
-
-```php
-// config/horizon.php supervisors
-'supervisor-1' => [
-    'queue' => ['default', 'emails'],
-    'minProcesses' => 1,
-    'maxProcesses' => 10,
-    'tries' => 3,
-    'timeout' => 300,
-]
-```
-
-### Job Patterns
+### Job Best Practices
 - Implement `ShouldQueue` interface for all async jobs
 - Set job timeout: `public int $timeout = 300;`
 - Set max attempts: `public int $tries = 3;`
 - Implement exponential backoff: `public array $backoff = [60, 120, 240];`
-- Use job middleware for rate limiting and exception handling
-- Use named batches for related jobs: `Bus::batch()->name('import-users')`
 - Handle failures with failed() method
+- Make all jobs idempotent (safe to retry)
 
 ```php
 class ProcessVideoUpload implements ShouldQueue
@@ -230,18 +193,16 @@ class ProcessVideoUpload implements ShouldQueue
 }
 ```
 
-### Queue Best Practices
+### When to Queue
 - Queue all long-running operations (emails, exports, external API calls)
 - Use queue priorities: `dispatch()->onQueue('high')`
-- Tag jobs for better monitoring: `dispatch()->onQueue('default')->tag('user-action')`
-- Use job batching for related jobs
-- Implement graceful shutdown in Supervisor config (stopwaitsecs=300)
+- Use job batching for related jobs: `Bus::batch()`
+- Implement graceful shutdown in queue workers
 
 ## API Development
 
 ### FormRequest Validation
 - Create FormRequest for ALL incoming requests
-- Make validation config-driven (limits from config files)
 - Implement custom error messages
 - Use authorization() method for policy checks
 - Never validate in controllers
@@ -251,10 +212,13 @@ class StoreUserRequest extends FormRequest
 {
     public function rules(): array {
         return [
-            'name' => ['required', 'string', 'max:' . config('validation.name_max')],
+            'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'unique:users'],
-            'role' => ['required', Rule::in(config('roles.allowed'))],
         ];
+    }
+
+    public function authorize(): bool {
+        return $this->user()->can('create', User::class);
     }
 }
 ```
@@ -264,7 +228,6 @@ class StoreUserRequest extends FormRequest
 - Never return raw models or arrays
 - Implement conditional attributes with `whenLoaded()`
 - Use resource collections for lists
-- Include metadata (pagination, timestamps)
 
 ```php
 class UserResource extends JsonResource
@@ -273,7 +236,9 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'email' => $this->email,
             'posts' => PostResource::collection($this->whenLoaded('posts')),
+            'created_at' => $this->created_at->toISOString(),
         ];
     }
 }
@@ -304,32 +269,29 @@ class PaymentFailedException extends Exception
 }
 ```
 
-## Caching Strategy
+## Caching Best Practices
 
-### Redis Caching
-- Use Redis for all caching (sessions, cache, queue)
 - Set appropriate TTL for all cached items
-- Use cache tags for grouped invalidation: `Cache::tags(['users', 'posts'])`
 - Invalidate cache BEFORE write operations (prevent race conditions)
 - Use `remember()` for cache-aside pattern
 - Use cache locks to prevent race conditions: `Cache::lock()`
+- Use descriptive cache keys: `users:{id}:profile`
 
 ```php
 // Cache with TTL
 $users = Cache::remember('active-users', 3600, fn() => User::active()->get());
 
 // Invalidate BEFORE updates
-Cache::tags('users')->flush();
+Cache::forget('active-users');
 $user->update($data);
 
 // Cache locks prevent race conditions
 $lock = Cache::lock('process-order-' . $orderId, 10);
+if ($lock->get()) {
+    // Process order
+    $lock->release();
+}
 ```
-
-### Cache Keys
-- Use descriptive, hierarchical cache keys: `users:{id}:profile`
-- Include version numbers for cache breaking: `v1:users:list`
-- Use model-based cache keys: `User::cacheKey($id)`
 
 ## Security & Authentication
 
@@ -337,7 +299,6 @@ $lock = Cache::lock('process-order-' . $orderId, 10);
 - Use Sanctum for SPA and mobile API authentication
 - Issue tokens with scopes: `createToken('token-name', ['posts:read'])`
 - Validate token abilities in middleware
-- Implement token refresh logic
 - Set token expiration in config
 
 ### Authorization
@@ -353,7 +314,9 @@ public function update(User $user, Post $post): bool {
 }
 
 // Check in FormRequest authorize()
-return $this->user()->can('update', $this->route('post'));
+public function authorize(): bool {
+    return $this->user()->can('update', $this->route('post'));
+}
 ```
 
 ### Security Best Practices
@@ -377,9 +340,21 @@ return $this->user()->can('update', $this->route('post'));
 ```php
 // Feature test
 test('can create user', function () {
-    $response = $this->postJson('/api/v1/users', ['name' => 'John']);
+    $response = $this->postJson('/api/v1/users', [
+        'name' => 'John',
+        'email' => 'john@example.com',
+    ]);
+
     $response->assertCreated();
-    $this->assertDatabaseHas('users', ['name' => 'John']);
+    $this->assertDatabaseHas('users', ['email' => 'john@example.com']);
+});
+
+// Unit test
+test('user service creates user', function () {
+    $service = new UserService(new UserRepository());
+    $user = $service->createUser(['name' => 'John', 'email' => 'john@example.com']);
+
+    expect($user)->toBeInstanceOf(User::class);
 });
 ```
 
@@ -401,20 +376,11 @@ test('can create user', function () {
 - Use OPcache for PHP bytecode caching
 
 ### Monitoring
-- Use Laravel Horizon for queue monitoring
-- Use Laravel Telescope for debugging (development only)
 - Implement health check endpoint: `/api/health`
 - Use Laravel Pail for real-time log monitoring: `php artisan pail`
-- Monitor Redis memory usage
+- Monitor queue processing
 - Set up application performance monitoring (APM)
-
-### Performance
-- Enable query caching in Redis
-- Use CDN for static assets
-- Implement database read replicas
-- Use Laravel Octane for high-performance applications
-- Enable gzip compression
-- Optimize images and assets
+- Monitor database query performance
 
 ### Configuration
 - Use environment variables for all config: `.env` file
@@ -422,23 +388,6 @@ test('can create user', function () {
 - Use `.env.example` as template
 - Validate required env vars on boot
 - Use typed config values: `config('app.max_users', 100)`
-
-## Laravel 12.x Specific Features
-
-### New in Laravel 12
-- Check Laravel 12 release notes for new features
-- Use latest Eloquent improvements
-- Leverage new artisan commands
-- Use new validation rules
-- Implement new caching strategies
-
-### Package Recommendations
-- `laravel/horizon` - Queue monitoring and management
-- `laravel/telescope` - Debugging assistant (development only)
-- `laravel/pail` - Real-time log monitoring
-- `laravel/sanctum` - API authentication for SPAs/mobile
-- `spatie/laravel-query-builder` - API query building
-- `aws/aws-sdk-php-laravel` - AWS services integration
 
 ## Config-Driven Development
 
@@ -453,15 +402,25 @@ test('can create user', function () {
 return [
     'max_login_attempts' => env('MAX_LOGIN_ATTEMPTS', 5),
     'max_file_size_mb' => env('MAX_FILE_SIZE_MB', 10),
+    'session_timeout_minutes' => env('SESSION_TIMEOUT', 120),
 ];
 
-// Usage: config('business.max_file_size_mb')
+// Usage in code
+$maxAttempts = config('business.max_login_attempts');
 ```
+
+## Recommended Packages
+
+- `laravel/sanctum` - API authentication for SPAs/mobile
+- `laravel/pail` - Real-time log monitoring
+- `laravel/horizon` - Queue monitoring (if using Redis queues)
+- `laravel/telescope` - Debugging assistant (development only)
+- `spatie/laravel-query-builder` - API query building
 
 ## Documentation Requirements
 
 - Add PHPDoc blocks to public methods explaining why, not what
-- Document architectural decisions in ADR format
+- Document architectural decisions in `.claude/claude-md-refs/architecture.md`
 - Keep README updated with setup and deployment instructions
 - Document all environment variables in `.env.example`
 - Document API endpoints with OpenAPI/Swagger when appropriate

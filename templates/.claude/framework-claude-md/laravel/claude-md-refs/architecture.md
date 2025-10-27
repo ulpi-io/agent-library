@@ -1,120 +1,276 @@
-# Project Architecture Decisions
+# Project Architecture
 
-Key architectural patterns and decisions for this Laravel project. Customize for your architecture.
+Architecture decisions and patterns for this Laravel project.
 
 ## Application Architecture
 
-- **Pattern**: Service-Repository-Model architecture
-- **Services**: Business logic layer, injected into controllers
-- **Repositories**: Data access layer, abstracts database operations
+**Pattern:** Service-Repository-Model architecture
+
+- **Controllers**: Thin routing layer only, handle HTTP concerns
+- **Services**: Business logic layer, orchestrate operations
+- **Repositories**: Data access layer (optional, use for complex queries)
 - **Models**: Eloquent models with relationships and scopes only
-- **DTOs**: Use typed DTOs for complex data transfer between layers
+- **Jobs**: Async operations (emails, exports, external API calls)
 
-## Multi-Tenancy (if applicable)
-
-- **Strategy**: Single database with tenant_id on all tables
-- **Tenant Resolution**: Subdomain-based (tenant.app.com)
-- **Scope**: Global `TenantScope` applied to all tenant-aware models
-- **Switching**: Only super admins can switch tenants via `ActingAsTenant` middleware
-- **Isolation**: Database-level row isolation, Redis namespacing per tenant
-
-## API Architecture
-
-- **Style**: RESTful with JSON responses
-- **Versioning**: URL-based (`/api/v1/`, `/api/v2/`)
-- **Breaking Changes**: Require new API version, old versions maintained for 6 months
-- **Deprecation**: Announced 3 months in advance via `X-API-Deprecated` header
-- **Rate Limiting**: 60 requests/minute per authenticated user, 10/minute for guests
-- **Pagination**: Cursor-based for large datasets, offset for small collections
+**Why:** Separates concerns, makes testing easier, keeps controllers thin.
 
 ## Authentication & Authorization
 
-- **API Auth**: Laravel Sanctum with token-based authentication
-- **Web Auth**: Session-based with `auth` middleware
-- **Token Expiry**: API tokens expire after 30 days of inactivity
-- **Permissions**: Role-based with Policies for model authorization
-- **2FA**: TOTP-based two-factor authentication via `laravel/fortify`
+**API Authentication:** Laravel Sanctum
+- Token-based authentication for SPAs and mobile apps
+- Token expiry: 30 days of inactivity
+- Scopes for granular permissions: `createToken('name', ['posts:read', 'posts:write'])`
 
-## Event-Driven Architecture
+**Web Authentication:** Session-based with Laravel's default `auth` middleware
 
-- **Events**: All domain events extend `DomainEvent` base class
-- **Dispatch Timing**: After database transaction commits (`DB::afterCommit()`)
-- **Listeners**: Queued by default for async processing
-- **Event Store**: All events logged to `domain_events` table for replay
-- **Notifications**: Broadcast via Pusher for real-time updates
+**Authorization:** Laravel Policies
+- Model-based authorization via Policy classes
+- Gate-based for simple boolean checks
+- Always check in FormRequest `authorize()` method
 
-## Queue Architecture
+## API Design
 
-- **Driver**: Redis with Laravel Horizon for monitoring
-- **Queues**:
-  - `high` - Critical operations (payments, orders) - 10 workers
-  - `default` - Standard operations (emails, notifications) - 5 workers
-  - `low` - Background tasks (reports, cleanup) - 2 workers
-  - `external` - Third-party API calls - 3 workers with rate limiting
-- **Retry Strategy**: 3 attempts with exponential backoff (60s, 120s, 240s)
-- **Failed Jobs**: Manual review required, stored in `failed_jobs` table
-- **Monitoring**: Horizon dashboard at `/horizon` (admin only)
+**Style:** RESTful with JSON responses
 
-## Caching Strategy
+**Versioning:** URL-based (`/api/v1/`, `/api/v2/`)
+- New version for breaking changes
+- Maintain old versions for 6 months
+- Announce deprecation via `X-API-Deprecated` header
 
-- **Driver**: Redis for all caching
-- **Layers**:
-  - Application cache: 5-minute TTL for dynamic data
-  - Query cache: Tagged cache, invalidated on model updates
-  - Configuration cache: File-based in production (`config:cache`)
-  - Route cache: File-based in production (`route:cache`)
-- **Invalidation**: Invalidate BEFORE write operations to prevent race conditions
-- **Tags**: Use cache tags for grouped invalidation (e.g., `['users', 'posts']`)
-- **Locks**: Use Redis locks for atomic operations
+**Rate Limiting:**
+- Authenticated users: 60 requests/minute
+- Guests: 10 requests/minute
+- Configure in `app/Providers/RouteServiceProvider.php`
 
-## Database Architecture
+**Pagination:** Cursor-based for large datasets, offset for small collections
 
-- **Primary DB**: MySQL 8.0 for relational data
-- **Cache/Queue**: Redis 7.x for caching and queue storage
-- **Search**: Elasticsearch via Laravel Scout for full-text search (if applicable)
-- **NoSQL**: DynamoDB for event logs and analytics data (if applicable)
-- **Read Replicas**: Load balance reads across replicas in production
-- **Migrations**: All schema changes via migrations, no manual SQL
+**Response Format:**
+```json
+{
+  "data": { ... },
+  "meta": {
+    "cursor": "...",
+    "next_cursor": "...",
+    "total": 100
+  }
+}
+```
+
+## Database
+
+**Primary Database:** MySQL 8.0
+- Connection: `mysql` (default)
+- Use InnoDB engine for all tables
+- UTF8MB4 charset for emoji support
+
+**Schema Changes:**
+- All changes via migrations
+- Never modify migrations after deployment
+- Always include `down()` method for rollbacks
+
+**Indexes:**
+- Index all foreign keys
+- Index frequently queried columns
+- Add composite indexes for common query patterns
+
+## Queue System
+
+**Driver:** Redis
+- Connection: `redis` in `config/queue.php`
+- Default queue for standard operations
+- Use named queues for priority: `dispatch()->onQueue('high')`
+
+**Queue Workers:**
+```bash
+php artisan queue:work redis --sleep=3 --tries=3 --max-time=3600
+```
+
+**Job Configuration:**
+- Timeout: 300 seconds (5 minutes) default
+- Max attempts: 3 with exponential backoff
+- Backoff: [60, 120, 240] seconds between retries
+
+**When to Queue:**
+- Sending emails
+- Processing uploads
+- Generating reports
+- External API calls
+- Any operation taking >2 seconds
+
+**Monitoring:**
+- Use Laravel Horizon for Redis queue monitoring
+- Dashboard at `/horizon` (admin only)
+- Configure in `config/horizon.php`
+
+## Caching
+
+**Driver:** Redis
+- Connection: `redis` in `config/cache.php`
+- Separate Redis database from queue (database 1 for cache, 0 for queue)
+
+**Cache Strategy:**
+- TTL: 3600 seconds (1 hour) for dynamic data
+- Cache expensive queries (>100ms)
+- Invalidate cache BEFORE write operations
+- Use cache tags for grouped invalidation
+
+**Example:**
+```php
+// Cache with tags
+Cache::tags(['users', 'posts'])->remember('user-' . $id, 3600, fn() => User::find($id));
+
+// Invalidate before update
+Cache::tags(['users'])->flush();
+$user->update($data);
+```
 
 ## File Storage
 
-- **Driver**: S3-compatible storage (AWS S3 or MinIO)
-- **Public Files**: Uploaded to `public` disk, accessible via CDN
-- **Private Files**: Uploaded to `private` disk, served via signed URLs
-- **Image Processing**: Queue jobs with Intervention Image for resizing
-- **Retention**: Temp files auto-deleted after 24 hours
+**Driver:** S3 (AWS S3 or S3-compatible like MinIO)
+- Public files: `public` disk → accessible via CloudFront CDN
+- Private files: `private` disk → served via signed URLs
+- Temp files: Auto-delete after 24 hours
 
-## Background Job Patterns
+**Configuration:**
+```php
+// config/filesystems.php
+'s3' => [
+    'driver' => 's3',
+    'key' => env('AWS_ACCESS_KEY_ID'),
+    'secret' => env('AWS_SECRET_ACCESS_KEY'),
+    'region' => env('AWS_DEFAULT_REGION'),
+    'bucket' => env('AWS_BUCKET'),
+],
+```
 
-- **Long Operations**: Always queue (emails, reports, file processing, API calls)
-- **Job Batching**: Group related jobs with `Bus::batch()` for tracking
-- **Job Chaining**: Use `->chain()` for dependent sequential jobs
-- **Rate Limiting**: Apply `RateLimited` middleware to external API jobs
-- **Idempotency**: All jobs must be idempotent (safe to retry)
+**Local Development:** Use `local` disk, switch to S3 in production
 
-## Logging & Monitoring
+## Logging
 
-- **Log Driver**: Stack driver (daily files + Slack for errors in production)
-- **Log Channels**: Separate channels for `api`, `queue`, `auth`, `payments`
-- **Metrics**: Custom metrics tracked via Horizon tags and Telescope
-- **APM**: Application Performance Monitoring via New Relic/Datadog (if applicable)
-- **Error Tracking**: Sentry for exception tracking and alerting
+**Driver:** Stack (daily files + Slack for production errors)
+
+**Channels:**
+- `daily`: Daily log files in `storage/logs/`
+- `slack`: Critical errors sent to Slack (production only)
+- `stderr`: For Docker containers
+
+**Configuration:**
+```php
+// config/logging.php
+'stack' => [
+    'driver' => 'stack',
+    'channels' => ['daily', 'slack'],
+],
+```
+
+**Best Practices:**
+- Log all exceptions
+- Log business-critical operations (payments, orders)
+- Use appropriate levels: debug, info, warning, error, critical
+- Never log sensitive data (passwords, tokens, credit cards)
 
 ## Testing Strategy
 
-- **Unit Tests**: All services and complex business logic
-- **Feature Tests**: All API endpoints and web routes
-- **Integration Tests**: External API integrations with mocked responses
-- **Browser Tests**: Critical user flows with Laravel Dusk (if applicable)
-- **Coverage Target**: Minimum 80% on services, 90% on critical payment flows
-- **CI/CD**: All tests run on every PR, must pass before merge
+**Framework:** PHPUnit or Pest
+- Feature tests: All API endpoints
+- Unit tests: Services and complex business logic
+- Use `RefreshDatabase` trait for test isolation
 
-## Security Practices
+**Coverage Target:**
+- Services: 80% minimum
+- Critical paths (payments, auth): 95% minimum
+- Controllers: Feature test for every endpoint
 
-- **Input Validation**: All requests via FormRequests
-- **SQL Injection**: Prevented by Eloquent (no raw queries without bindings)
-- **XSS**: Blade templates auto-escape, API returns JSON only
-- **CSRF**: Enabled for all web routes, excluded for API routes
-- **Rate Limiting**: Applied to login, registration, API endpoints
-- **Secrets**: All sensitive data in `.env`, never committed to git
-- **Dependencies**: Weekly automated security updates via Dependabot
+**Test Organization:**
+```
+tests/
+  Feature/     # API endpoint tests
+  Unit/        # Service and logic tests
+  Factories/   # Model factories
+```
+
+**CI/CD:**
+- All tests must pass before merge
+- Run tests in parallel: `php artisan test --parallel`
+- Generate coverage reports weekly
+
+## Security
+
+**Secrets Management:**
+- Store secrets in `.env` file (development)
+- Use AWS Secrets Manager or similar in production
+- Rotate API keys quarterly
+
+**HTTPS:**
+- Always use HTTPS in production
+- Redirect HTTP to HTTPS in production
+
+**Input Validation:**
+- All requests validated via FormRequest classes
+- Never trust client input
+- Sanitize before display (Blade auto-escapes)
+
+**SQL Injection Prevention:**
+- Use Eloquent ORM (auto-escapes)
+- If raw queries needed, always use parameter binding
+
+**CSRF Protection:**
+- Enabled for all web routes
+- Excluded for API routes (use Sanctum tokens instead)
+
+**Rate Limiting:**
+- Login: 5 attempts per minute
+- Registration: 3 attempts per minute
+- API: 60 requests per minute (authenticated)
+- Forgot password: 3 attempts per hour
+
+## Deployment
+
+**Environment:**
+- Development: Local with SQLite/MySQL
+- Staging: Mirrors production environment
+- Production: AWS/DigitalOcean/Laravel Forge
+
+**Deployment Process:**
+1. Run tests: `php artisan test`
+2. Deploy to staging
+3. Run smoke tests on staging
+4. Deploy to production (off-peak hours)
+5. Run migrations: `php artisan migrate --force`
+6. Clear and cache config: `php artisan optimize`
+7. Restart queue workers: `php artisan queue:restart`
+
+**Zero-Downtime:**
+- Use Laravel Envoy or Deployer for atomic deployments
+- Put app in maintenance mode: `php artisan down`
+- Deploy changes
+- Bring app up: `php artisan up`
+
+**Rollback Plan:**
+- Keep last 5 releases on server
+- Database rollback via migrations: `php artisan migrate:rollback`
+- Code rollback: Switch symlink to previous release
+
+## Monitoring
+
+**Application Performance:**
+- Laravel Telescope (development only)
+- Laravel Horizon (queue monitoring)
+- Health check endpoint: `GET /api/health`
+
+**Error Tracking:**
+- Log errors to daily files
+- Send critical errors to Slack
+- Consider Sentry for production error tracking
+
+**Metrics to Monitor:**
+- Queue depth and processing time
+- Failed jobs count
+- API response times
+- Database query performance
+- Cache hit ratio
+- Disk space usage
+
+---
+
+**Note:** This architecture works great for most Laravel projects. Customize sections as your project grows.
