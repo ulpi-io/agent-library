@@ -46,11 +46,12 @@ function showClaudeNextSteps(framework, agents, skills) {
   console.log(chalk.yellow('For Claude Code:\n'));
   console.log('   1. Open Claude Code in this directory');
   console.log(`   2. ${chalk.cyan('IMPORTANT:')} Say ${chalk.gray('"use start skill"')} to discover available skills and agents`);
-  console.log(`   3. Edit ${chalk.gray('CLAUDE.md')} to customize project conventions and commands`);
-  console.log(`   4. Ask: ${chalk.gray('"Review my code for ' + framework + ' best practices"')}`);
+  console.log(`   3. Say ${chalk.gray('"use update-claude-md-after-install skill"')} to customize CLAUDE.md for your project`);
+  console.log(`   4. Edit ${chalk.gray('CLAUDE.md')} to add project-specific conventions and commands`);
+  console.log(`   5. Ask: ${chalk.gray('"Review my code for ' + framework + ' best practices"')}`);
 
   if (agents.length > 1) {
-    console.log(`   5. You have ${agents.length} specialized agents available`);
+    console.log(`   6. You have ${agents.length} specialized agents available`);
   }
 
   console.log();
