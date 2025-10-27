@@ -1,6 +1,6 @@
 ---
 name: update-claude-md-after-install
-description: Use when user has just installed Laravel (or other framework) agents and CLAUDE.md contains generic examples - systematically discovers actual project patterns (custom commands, architecture decisions, team conventions) and updates CLAUDE.md and imported files with real project-specific information
+description: Use when user has just installed framework agents and CLAUDE.md contains generic examples - systematically discovers actual project patterns (custom commands, architecture decisions, team conventions) and updates CLAUDE.md and imported files with real project-specific information
 ---
 
 # Update CLAUDE.md After Installation
@@ -15,7 +15,7 @@ After installing framework agents, CLAUDE.md and its imported files contain gene
 
 Use this skill when:
 - **Initial install:** User just installed agents and CLAUDE.md has generic examples
-- **Project start:** Beginning work on a Laravel project for the first time
+- **Project start:** Beginning work on a project for the first time
 - **Key milestones:** After major architecture changes, new custom commands added, team conventions updated
 - **Periodic refresh:** User asks to "update docs" or "sync CLAUDE.md with project"
 - **Discovery gaps:** CLAUDE.md outdated or missing new project patterns
@@ -84,8 +84,8 @@ cat package.json | grep -A 20 "\"scripts\""
 ```
 
 **What to extract:**
-- Command signature: `php artisan app:command-name`
-- Description from docblock or `$description` property
+- Command signature (e.g., `php artisan app:command-name`, `npm run custom-task`, `yarn workspace:sync`)
+- Description from docblock, comments, or help text
 - When it's used (schedule, manual, deployment)
 
 **Update:** Replace generic examples in `.claude/claude-md-refs/project-commands.md` with discovered commands.
@@ -232,9 +232,9 @@ Before completing, verify:
 
 **Root CLAUDE.md:**
 - [ ] Project Commands section has actual commands, not just generic examples
-- [ ] Code Style matches project (if different from Laravel defaults)
+- [ ] Code Style matches project (if different from framework defaults)
 - [ ] File Organization reflects actual project structure
-- [ ] All framework sections match how project actually uses Laravel
+- [ ] All framework sections match how project actually uses the framework
 
 **All Imported Files (discovered via @ imports):**
 - [ ] Extracted all @import paths from root CLAUDE.md
@@ -271,7 +271,7 @@ If discovery doesn't find project-specific patterns:
 
 1. **For commands:** Keep generic examples but add comment: "No custom commands found. Add your commands here as you create them."
 
-2. **For architecture:** Keep generic examples and add note: "These are common Laravel patterns. Update as your architecture evolves."
+2. **For architecture:** Keep generic examples and add note: "These are common patterns for this framework. Update as your architecture evolves."
 
 3. **For conventions:** Ask user: "I didn't find team conventions in .github/ or CONTRIBUTING.md. Do you have documented standards elsewhere?"
 
@@ -279,22 +279,40 @@ If discovery doesn't find project-specific patterns:
 
 ## Example: Updating project-commands.md
 
-**Before (generic):**
+**Laravel Project Example:**
+
+Before (generic):
 ```markdown
 ## Custom Artisan Commands
-
 - `php artisan app:sync-users` - Sync users from external service
 - `php artisan app:generate-reports` - Generate monthly reports
 ```
 
-**After discovery finds:** `app/Console/Commands/ImportOrdersCommand.php` and `app/Console/Commands/SendDailySummaryCommand.php`
+After discovery finds: `app/Console/Commands/ImportOrdersCommand.php` and `app/Console/Commands/SendDailySummaryCommand.php`
 
-**After (updated):**
+After (updated):
 ```markdown
 ## Custom Artisan Commands
-
 - `php artisan app:import-orders {source}` - Import orders from external platform (Shopify, WooCommerce)
 - `php artisan app:send-daily-summary` - Send daily summary emails to admin users (runs at 8am via scheduler)
+```
+
+**Express/Node.js Project Example:**
+
+Before (generic):
+```markdown
+## Custom NPM Scripts
+- `npm run sync:data` - Sync data from external service
+- `npm run generate:reports` - Generate monthly reports
+```
+
+After discovery finds scripts in `package.json` and files in `src/scripts/`
+
+After (updated):
+```markdown
+## Custom NPM Scripts
+- `npm run import:orders -- --source=shopify` - Import orders from Shopify API
+- `npm run email:daily-summary` - Send daily summary emails (runs via cron at 8am)
 ```
 
 Notice:
